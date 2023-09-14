@@ -1,13 +1,3 @@
-<?php
-include '.modalidade.php';
-include '.noticias.php';
-$modalidadesCadastradas = new Modalidade;
-$modalidades = $modalidadesCadastradas->selecionarModalidades();
-
-$noticiasCadastradas = new Noticia;
-$noticias = $noticiasCadastradas->selecionarNoticias();
-?>
-
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -24,7 +14,6 @@ $noticias = $noticiasCadastradas->selecionarNoticias();
 </head>
 
 <body>
-]
     <!-- Navbar-->
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
@@ -56,26 +45,64 @@ $noticias = $noticiasCadastradas->selecionarNoticias();
     <!-- Barra de Pesquisa-->
     <div class="container-fluid">
         <div class="input-group mb-12">
-            <input type="text" class="form-control" placeholder="Pesquisar" aria-label="Pesquisar" aria-describedby="basic-addon2">
+            <input type="text" class="form-control" placeholder="Pesquisar" aria-label="Pesquisar"
+                aria-describedby="basic-addon2">
             <span class="input-group-text nav-item dropdown" id="basic-addon2">
-                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">MODALIDADES</a>
+                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button"
+                    aria-expanded="false">MODALIDADES</a>
                 <ul class="dropdown-menu">
-                    <?php foreach($modalidades as $modalidade) :?>
-                        <form action="" method="POST">
-                        <?php $id_modalidade = $modalidade["id_modalidade"]; ?>
-                        <li><a class="dropdown-item"><?=$modalidade["nm_modalidade"]?></a></li>
-                        </form>
-                    <?php endforeach; ?>
                 </ul>
             </span>
         </div>
     </div>
 
-        <!-- Notícias-->
+    <!-- Notícias-->
     <div class="container-fluid">
-        
 
+        <div class="row">
+            <div class="col">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">Título da Notícia</h5>
+                        <p class="card-text">Conteúdo da Notícia.............</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">Título da Notícia</h5>
+                        <p class="card-text">Conteúdo da Notícia.............</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">Título da Notícia</h5>
+                        <p class="card-text">Conteúdo da Notícia.............</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">Título da Notícia</h5>
+                        <p class="card-text">Conteúdo da Notícia.............</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">Título da Notícia</h5>
+                        <p class="card-text">Conteúdo da Notícia.............</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
 </body>
 
 </html>
