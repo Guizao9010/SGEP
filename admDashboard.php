@@ -14,7 +14,7 @@
 
 <body>
     <nav class="navbar navbar-expand-lg nav">
-        <div class="container-fluid">           
+        <div class="container-fluid">
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
@@ -22,7 +22,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" style="color: white;" href="#">Cadastrar Cliente</a>
-                    </li>                   
+                    </li>
                 </ul>
                 <button type="button" class="btn exit"><iconify-icon icon="system-uicons:exit-left" style="color: white;" width="40" height="40"></iconify-icon></button>
             </div>
@@ -44,7 +44,7 @@
                 <td>SV-013-A</td>
                 <td>CWa6&/8B-Z&4</td>
                 <td>
-                    <button type="button" class="btn btn-warning">Alterar</button>
+                    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal">Alterar</button>
                     <button type="button" class="btn btn-danger">Apagar</button>
                 </td>
             </tr>
@@ -54,7 +54,7 @@
                 <td>PG-013-A</td>
                 <td>,GW~ax?vdWFF</td>
                 <td>
-                    <button type="button" class="btn btn-warning">Alterar</button>
+                    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal">Alterar</button>
                     <button type="button" class="btn btn-danger">Apagar</button>
                 </td>
             </tr>
@@ -64,12 +64,41 @@
                 <td>SA-013-A</td>
                 <td>BBn&qXbY8Max</td>
                 <td>
-                    <button type="button" class="btn btn-warning">Alterar</button>
+                    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal">Alterar</button>
                     <button type="button" class="btn btn-danger">Apagar</button>
                 </td>
             </tr>
         </tbody>
     </table>
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Editar Usuário</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                    <div class="mb-3">
+                            <label class="form-label">Cliente</label>
+                            <input type="name" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Código</label>
+                            <input type="name" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Senha</label>
+                            <input type="password" class="form-control">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-success">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
