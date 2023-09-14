@@ -1,6 +1,10 @@
 REM   Script: BD - PROJETO ENGENHARIA
 REM   Codigo do Banco de Dados de Projeto de Engenharia
 
+CREATE DATABASE site;
+
+USE DATABASE SITE
+
 CREATE TABLE USUARIO  
 (  
  ds_email VARCHAR(50) PRIMARY KEY,   

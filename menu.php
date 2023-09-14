@@ -1,6 +1,6 @@
 <?php
-include '.modalidade.php';
-include '.noticias.php';
+include 'modalidade.php';
+include 'noticias.php';
 $modalidadesCadastradas = new Modalidade;
 $modalidades = $modalidadesCadastradas->selecionarModalidades();
 

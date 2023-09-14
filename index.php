@@ -13,7 +13,7 @@
 <body>
 
     <div class="container-fluid">
-        <form action="" method="POST">
+        <form action="index.php" method="POST">
             <div class="mb-3">
                 <label for="emailUsuario" class="form-label">Email:</label>
                 <input type="text" class="form-control" id="emailUsuario" name="email">
@@ -31,17 +31,17 @@
 </html>
 
 <?php
+require 'src/listagemusuarios.php';
+
 if (isset($_POST["logar"])) {
-    $usuario = new Usuario;
-    $usuario->nome = $_POST["usuario"];
-    $usuario->senha = $_POST["senha"];
+    $email = $_POST["email"];
+    $nome = "Joao";
+    $senha = $_POST["senha"];
 
-    $login = $usuario->logarUsuario($usuario->nome, $usuario->senha);
+    cadastrarUsuario($email, $nome, $senha);
 
-    if ($login) {
-        header("Location:menu.php");
-    }else{
-        echo '<script>alert("Usuario ou Senha Inválidos!")</script>';
-    }
+    listarUsuarios();
+
+    
 }
 ?>

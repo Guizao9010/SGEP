@@ -1,5 +1,5 @@
 <?php
-require_once '../src/conn.php';
+require_once 'conn.php';
 $banco = getConnection();
 
 function listarUsuarios(){
@@ -15,7 +15,9 @@ function listarUsuarios(){
 
 function cadastrarUsuario($email,$nome,$senha){
     global $banco;
-    $banco->query("INSERT INTO usuario VALUES('$email','$nome','$senha')");
+    $stmt = $banco->prepare("INSERT INTO usuario VALUES(:email,:nome,:senha)");
+    $stmt->execute([':email' => $email, ':nome' => $nome ,':senha' => $senha]);
+    $stmt = null;
 }
 
 function excluirUsuario($email){
