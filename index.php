@@ -1,6 +1,14 @@
+<?php
+require "src/controller/listagemusuarios.php";
+$user_obj = new User();
+// Se o usuario requisitar o login
+if(isset($_POST['email']) && isset($_POST['password'])){
+  $user_obj->loginUser($_POST['email'],$_POST['password']);
+}
+
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,7 +17,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
     <title>Login</title>
 </head>
-
 <body>
 
     <div class="container-fluid">
@@ -27,21 +34,4 @@
     </div>
 
 </body>
-
 </html>
-
-<?php
-require 'src/listagemusuarios.php';
-
-if (isset($_POST["logar"])) {
-    $email = $_POST["email"];
-    $nome = "Joao";
-    $senha = $_POST["senha"];
-
-    cadastrarUsuario($email, $nome, $senha);
-
-    listarUsuarios();
-
-    
-}
-?>

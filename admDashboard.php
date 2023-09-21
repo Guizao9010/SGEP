@@ -1,6 +1,20 @@
+<?php
+require_once "src/controller/listagemusuarios.php";
+$user_obj = new User();
+if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
+    $user_data = $user_obj->procurar_user_por_id($_SESSION['user_id']);
+    if ($user_data ===  false) {
+        header('Location: logout.php');
+        exit;
+    }
+} else {
+    header('Location: logout.php');
+    exit;
+}
+
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,22 +23,27 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <link rel="stylesheet" href="css/style.css">
-    <title>MENU</title>
+    <title>Dashboard</title>
 </head>
-
 <body>
-    <nav class="navbar navbar-expand-lg nav">
+    <nav class="navbar navbar-expand-lg nav-color">
         <div class="container-fluid">
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <a class="navbar-brand" href="admDashboard.php">SGEP</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link active" style="color: white;" aria-current="page" href="#">Home</a>
+                        <a class="nav-link active" aria-current="page" href="admDashboard.php">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" style="color: white;" href="#">Cadastrar Cliente</a>
+                        <a class="nav-link" href="cadastroCliente.php">Cadastrar cliente</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="logout.php">Sair</a>
                     </li>
                 </ul>
-                <button type="button" class="btn exit"><iconify-icon icon="system-uicons:exit-left" style="color: white;" width="40" height="40"></iconify-icon></button>
             </div>
         </div>
     </nav>
@@ -79,7 +98,7 @@
                 </div>
                 <div class="modal-body">
                     <form>
-                    <div class="mb-3">
+                        <div class="mb-3">
                             <label class="form-label">Cliente</label>
                             <input type="name" class="form-control">
                         </div>
@@ -100,5 +119,4 @@
         </div>
     </div>
 </body>
-
 </html>
