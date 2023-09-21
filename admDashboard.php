@@ -1,5 +1,5 @@
 <?php
-require_once "src/controller/listagemusuarios.php";
+require_once "src/controller/user.php";
 $user_obj = new User();
 if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
     $user_data = $user_obj->procurar_user_por_id($_SESSION['user_id']);
