@@ -2,8 +2,8 @@
 require "src/controller/listagemusuarios.php";
 $user_obj = new User();
 // Se o usuario requisitar o login
-if(isset($_POST['email']) && isset($_POST['password'])){
-  $user_obj->loginUser($_POST['email'],$_POST['password']);
+if(isset($_POST['email']) && isset($_POST['senha'])){
+  $user_obj->loginUser($_POST['email'],$_POST['senha']);
 }
 
 ?>
