@@ -1,10 +1,15 @@
+REM   Script: BD - PROJETO ENGENHARIA
+REM   Codigo do Banco de Dados de Projeto de Engenharia
+
+CREATE DATABASE site;
+
+USE DATABASE SITE
+
 CREATE TABLE USUARIO  
 (  
  ds_email VARCHAR(50) PRIMARY KEY,   
  nm_usuario VARCHAR(50) NOT NULL,   
- ds_senha VARCHAR(50) NOT NULL,
- cd_usuario CHAR(8) NOT NULL,
- sg_tipo VARCHAR(5) NOT NULL,
+ ds_senha VARCHAR(50) NOT NULL   
 );
 
 CREATE TABLE EVENTO  
