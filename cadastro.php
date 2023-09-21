@@ -20,7 +20,7 @@ if(isset($_POST['email']) && isset($_POST['senha']) && isset($_POST['nome']) && 
 <body>
 
     <div class="container-fluid">
-        <form action="index.php" method="POST">
+        <form action="" method="POST">
         <div class="mb-3">
                 <label for="nomeUsuario" class="form-label">Nome:</label>
                 <input type="text" class="form-control" id="nomeUsuario" name="nome">
