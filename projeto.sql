@@ -3,7 +3,8 @@ CREATE TABLE USUARIO
  ds_email VARCHAR(50) PRIMARY KEY,   
  nm_usuario VARCHAR(50) NOT NULL,   
  ds_senha VARCHAR(50) NOT NULL,
- cd_usuario CHAR(8) NOT NULL
+ cd_usuario CHAR(8) NOT NULL,
+ sg_role CHAR(4) NOT NULL,
 );
 
 CREATE TABLE EVENTO  
