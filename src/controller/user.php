@@ -18,10 +18,7 @@ class User extends Conexao{
     function listarUsuarios(){
         $dados = $this->db->query("SELECT * FROM usuario");
         $user = $dados->fetchAll(PDO::FETCH_ASSOC);
-        foreach($user as $u){
-            echo $u['nm_usuario'];
-            echo "\n";
-        }
+        return $user;
     }
 
     function cadastroUser($username, $email, $password, $confirm){

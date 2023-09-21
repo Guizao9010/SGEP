@@ -12,7 +12,14 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
     exit;
 }
 
+//Listagem de Usuários
+$users = new User();
+$list_users = $users->listarUsuarios();
+
+//Alterar Usuario
+
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -38,7 +45,7 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
                         <a class="nav-link active" aria-current="page" href="admDashboard.php">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="cadastroCliente.php">Cadastrar cliente</a>
+                        <a class="nav-link" href="cadastro.php">Cadastrar cliente</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="logout.php">Sair</a>
@@ -50,43 +57,25 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
     <table class="table">
         <thead>
             <tr>
-                <th scope="col">#</th>
                 <th scope="col">Cliente</th>
                 <th scope="col">Código</th>
                 <th scope="col">Senha</th>
             </tr>
         </thead>
         <tbody class="table-group-divider">
-            <tr>
-                <th scope="row">1</th>
-                <td>São Vicente</td>
-                <td>SV-013-A</td>
-                <td>CWa6&/8B-Z&4</td>
-                <td>
-                    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal">Alterar</button>
-                    <button type="button" class="btn btn-danger">Apagar</button>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">2</th>
-                <td>Praia Grande</td>
-                <td>PG-013-A</td>
-                <td>,GW~ax?vdWFF</td>
-                <td>
-                    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal">Alterar</button>
-                    <button type="button" class="btn btn-danger">Apagar</button>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">3</th>
-                <td>Santos</td>
-                <td>SA-013-A</td>
-                <td>BBn&qXbY8Max</td>
-                <td>
-                    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal">Alterar</button>
-                    <button type="button" class="btn btn-danger">Apagar</button>
-                </td>
-            </tr>
+            <?php foreach ($list_users as $user) : ?>
+                            <tr>
+                                <form action="" method="POST">
+                                    <?php $cd_usuario = $user["cd_usuario"]; ?>
+                                    <td><?= $user["nm_usuario"] ?></td>
+                                    <td><?= $user["cd_usuario"] ?></td>
+                                    <td><?= $user["ds_senha"] ?></td>
+                                    <td><button type="submit" class="btn btn-primary" name="atualizarUsuario" value="<?= $cd_usuario ?>">Alterar</button>
+                                    <td><button type="submit" class="btn btn-primary" name="excluirUsuario" value="<?= $cd_usuario ?>">Excluir</button>
+                                    <td>
+                                </form>
+                            </tr>
+            <?php endforeach; ?>
         </tbody>
     </table>
     <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
