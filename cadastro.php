@@ -1,5 +1,5 @@
 <?php
-require "src/controller/listagemusuarios.php";
+require "src/controller/user.php";
 $user_obj = new User();
 // Se o usuario requisitar o Cadastro
 if(isset($_POST['email']) && isset($_POST['senha']) && isset($_POST['nome']) && isset($_POST['confirm'])){
