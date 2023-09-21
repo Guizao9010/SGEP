@@ -1,11 +1,12 @@
 <?php
-require "src/controller/listagemusuarios.php";
+require "src/controller/user.php";
 $user_obj = new User();
 // Se o usuario requisitar o login
-if(isset($_POST['email']) && isset($_POST['senha'])){
-  $user_obj->loginUser($_POST['email'],$_POST['senha']);
+if(isset($_POST['email']) && isset($_POST['password'])){
+  $user_obj->loginUser($_POST['email'],$_POST['password']);
 }
 
+$user_obj->listarUsuarios();
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
