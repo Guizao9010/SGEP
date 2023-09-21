@@ -2,8 +2,8 @@
 require "src/controller/user.php";
 $user_obj = new User();
 // Se o usuario requisitar o Cadastro
-if(isset($_POST['email']) && isset($_POST['senha']) && isset($_POST['nome']) && isset($_POST['confirm'])){
-  $user_obj->cadastroUser($_POST['nome'],$_POST['email'],$_POST['senha'],$_POST['confirm']);
+if(isset($_POST['email']) && isset($_POST['senha']) && isset($_POST['nome']) && isset($_POST['idUsuario'])){
+  $user_obj->cadastroUser($_POST['nome'],$_POST['email'],$_POST['senha'],$_POST['idUsuario']);
 }
 
 ?>
@@ -18,7 +18,27 @@ if(isset($_POST['email']) && isset($_POST['senha']) && isset($_POST['nome']) && 
     <title>Cadastro</title>
 </head>
 <body>
-
+<nav class="navbar navbar-expand-lg nav-color">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="admDashboard.php">SGEP</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="admDashboard.php">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cadastro.php">Cadastrar cliente</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="logout.php">Sair</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
     <div class="container-fluid">
         <form action="" method="POST">
         <div class="mb-3">
@@ -31,14 +51,15 @@ if(isset($_POST['email']) && isset($_POST['senha']) && isset($_POST['nome']) && 
             </div>
             <div class="mb-3">
                 <label for="senhaUsuario" class="form-label">Senha:</label>
-                <input type="text" class="form-control" id="senhaUsuario" name="senha">
-            </div>
+                <input type="password" class="form-control" id="senhaUsuario" name="senha">
+            </div>            
             <div class="mb-3">
-                <label for="confirmarSenha" class="form-label">Confirmar Senha:</label>
-                <input type="text" class="form-control" id="confirmarSenha" name="confirm">
-                <button type="submit" class="btn btn-primary" name="cadastrar">Cadastrar</button>
-            </div>
+                <label for="emailUsuario" class="form-label">Codigo:</label>
+                <input type="text" class="form-control" id="idUsuario" name="idUsuario">
+                <button type="submit" class="btn btn-primary" name="logar">Cadastrar
 
+                </button>
+            </div>
         </form>
     </div>
 

@@ -12,9 +12,7 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
     exit;
 }
 
-//Listagem de Usuários
-$users = new User();
-$list_users = $users->listarUsuarios();
+$list_users = $user_obj->listarUsuarios();
 
 //Alterar Usuario
 
