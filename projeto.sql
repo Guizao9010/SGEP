@@ -4,7 +4,7 @@ CREATE TABLE USUARIO
  nm_usuario VARCHAR(50) NOT NULL,   
  ds_senha VARCHAR(50) NOT NULL,
  cd_usuario CHAR(8) NOT NULL,
- sg_tipo CHAR(5) DEFAULT('User')
+ sg_tipo CHAR(5) DEFAULT 'User'
 );
 
 CREATE TABLE EVENTO  

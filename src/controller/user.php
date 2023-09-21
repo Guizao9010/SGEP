@@ -8,7 +8,7 @@ class User extends Conexao{
     protected $user_pass;
     protected $user_confirmpass;
     protected $id_user;
-    
+
     function __construct(){
         parent::__construct();
     }
@@ -27,7 +27,8 @@ class User extends Conexao{
             $this->user_email = trim($email);
             $this->user_pass = trim($password);
             $this->user_confirmpass = trim($confirm);
-            
+            $this->user_tipo = 'User';
+
             if(!empty($this->user_name) && !empty($this->user_email) && !empty($this->user_pass) && !empty($this->user_confirmpass) && !empty($this->user_pass)){
                 
                 if($this->user_pass != $this->user_confirmpass){
@@ -42,7 +43,6 @@ class User extends Conexao{
                         }
                         else{
                             $sql = "INSERT INTO usuario (ds_email, nm_usuario, ds_senha, cd_usuario) VALUES(:user_email, :username, :user_pass, :id_user)";
-                
                             $sign_up_stmt = $this->db->prepare($sql);
                             //BIND VALUES
                             $sign_up_stmt->bindValue(':username',htmlspecialchars($this->user_name), PDO::PARAM_STR);
