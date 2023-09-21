@@ -102,12 +102,79 @@ class User extends Conexao{
         }
     }
 
-    // ATUALIZAR USUÁRIO
+    function atualizarUsuario($user_id, $username, $email, $password) {
+        try {
+            // Verifica se o ID do usuário é válido
+            $user_id = intval($user_id);
+            if ($user_id <= 0) {
+                return ['errorMessage' => 'ID de usuário inválido'];
+            }
+            
+            $this->user_name = trim($username);
+            $this->user_email = trim($email);
+            $this->user_pass = trim($password);
 
+            // Verifica se o email é válido
+            if (!filter_var($this->user_email, FILTER_VALIDATE_EMAIL)) {
+                return ['errorMessage' => 'Email inválido'];
+            }
 
-   // EXCLUIR USUÁRIO
+            // Verifica se a senha é fornecida
+            if (empty($this->user_pass)) {
+                return ['errorMessage' => 'Senha não fornecida'];
+            }
 
+            // Verifica se o usuário existe
+            $find_user = $this->db->prepare("SELECT * FROM usuario WHERE cd_usuario = ?");
+            $find_user->execute([$user_id]);
 
+            if ($find_user->rowCount() === 1) {
+                // Atualiza os dados do usuário
+                $sql = "UPDATE usuario SET nm_usuario = :username, ds_email = :user_email, ds_senha = :user_pass WHERE cd_usuario = :user_id";
+
+                $update_stmt = $this->db->prepare($sql);
+                // Atribui os valores a serem atualizados
+                $update_stmt->bindValue(':username', htmlspecialchars($this->user_name), PDO::PARAM_STR);
+                $update_stmt->bindValue(':user_email', $this->user_email, PDO::PARAM_STR);
+                $update_stmt->bindValue(':user_pass', $this->user_pass, PDO::PARAM_STR);
+                $update_stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+                $update_stmt->execute();
+
+                return ['successMessage' => 'Dados do usuário atualizados com sucesso'];
+            } else {
+                return ['errorMessage' => 'Usuário não encontrado'];
+            }
+        } catch (PDOException $e) {
+            die($e->getMessage());
+        }
+    }
+    
+function excluirUsuario($user_id) {
+    try {
+        // Verifica se o ID do usuário é válido
+        $user_id = intval($user_id);
+        if ($user_id <= 0) {
+            return ['errorMessage' => 'ID de usuário inválido'];
+        }
+
+        // Verifica se o usuário existe
+        $find_user = $this->db->prepare("SELECT * FROM usuario WHERE cd_usuario = ?");
+        $find_user->execute([$user_id]);
+
+        if ($find_user->rowCount() === 1) {
+            // Exclui o usuário do banco de dados
+            $delete_user = $this->db->prepare("DELETE FROM usuario WHERE cd_usuario = ?");
+            $delete_user->execute([$user_id]);
+
+            return ['successMessage' => 'Usuário excluído com sucesso'];
+        } else {
+            return ['errorMessage' => 'Usuário não encontrado'];
+        }
+    } catch (PDOException $e) {
+        die($e->getMessage());
+    }
+}
+   
     function procurar_user_por_id($id){
         try{
             $find_user = $this->db->prepare("SELECT * FROM usuario WHERE cd_usuario = ?");
