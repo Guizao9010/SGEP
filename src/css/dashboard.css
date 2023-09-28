@@ -1,0 +1,38 @@
+/* Default styles for larger screens */
+table {
+    width: 100%;
+}
+
+/* Styles for smaller screens (e.g., mobile devices) */
+@media (max-width: 768px) {
+    table {
+        font-size: 14px; /* Adjust font size for smaller screens */
+    }
+}
+
+.sidebar-container{
+    width: 210px;
+}
+
+.form-container{
+    width: 50%;
+    height: 50%;
+    padding-left: 5px;
+    left: 20%;
+}
+
+.errorMsg{
+    margin-top: 10px;
+    color: rgb(105, 0, 0);
+    background: #ffa0a0;
+    border: 2px solid #920500;
+    border-radius: 3px;
+}
+
+.successMsg{
+    margin-top: 10px;
+    color: rgb(25, 105, 0);
+    background: #a0ffa8;
+    border: 2px solid #009220;
+    border-radius: 3px;
+}
