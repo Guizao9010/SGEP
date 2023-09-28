@@ -75,33 +75,34 @@ class User extends Conexao
 
                 if ($this->user_pass === $row['ds_senha']) {
                     $_SESSION = [
-                        'user_id' => $row['cd_usuario'],
+                        'user_id' => $row['id'],
                         'email' => $row['ds_email']
                     ];
                     header('Location: admDashboard.php');
                 } else {
-                    return ['errorMessage' => 'Invalid password'];
+                    return ['errorMessage' => 'Senha inválida'];
                 }
             } else {
-                return ['errorMessage' => 'Invalid email address!'];
+                return ['errorMessage' => 'Email inválido'];
             }
         } catch (PDOException $e) {
             die($e->getMessage());
         }
     }
 
-    function atualizarUsuario($user_id, $username, $email, $password)
+    function atualizarUsuario($id, $username, $email, $password, $idUser)
     {
         try {
             // Verifica se o ID do usuário é válido
-            $user_id = intval($user_id);
-            if ($user_id <= 0) {
+            $id = intval($id);
+            if ($id <= 0) {
                 return ['errorMessage' => 'ID de usuário inválido'];
             }
 
             $this->user_name = trim($username);
             $this->user_email = trim($email);
             $this->user_pass = trim($password);
+            $this->id_user = trim($idUser);
 
             // Verifica se o email é válido
             if (!filter_var($this->user_email, FILTER_VALIDATE_EMAIL)) {
@@ -114,19 +115,20 @@ class User extends Conexao
             }
 
             // Verifica se o usuário existe
-            $find_user = $this->db->prepare("SELECT * FROM usuario WHERE cd_usuario = ?");
-            $find_user->execute([$user_id]);
+            $find_user = $this->db->prepare("SELECT * FROM usuario WHERE id = ?");
+            $find_user->execute([$id]);
 
             if ($find_user->rowCount() === 1) {
                 // Atualiza os dados do usuário
-                $sql = "UPDATE usuario SET nm_usuario = :username, ds_email = :user_email, ds_senha = :user_pass WHERE cd_usuario = :user_id";
+                $sql = "UPDATE usuario SET nm_usuario = :username, ds_email = :user_email, ds_senha = :user_pass, cd_usuario = :idUser WHERE id = :id";
 
                 $update_stmt = $this->db->prepare($sql);
                 // Atribui os valores a serem atualizados
                 $update_stmt->bindValue(':username', htmlspecialchars($this->user_name), PDO::PARAM_STR);
                 $update_stmt->bindValue(':user_email', $this->user_email, PDO::PARAM_STR);
                 $update_stmt->bindValue(':user_pass', $this->user_pass, PDO::PARAM_STR);
-                $update_stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+                $update_stmt->bindValue(':idUser', $this->id_user, PDO::PARAM_STR);
+                $update_stmt->bindValue(':id', $id, PDO::PARAM_INT);
                 $update_stmt->execute();
 
                 return ['successMessage' => 'Dados do usuário atualizados com sucesso'];
@@ -146,16 +148,12 @@ class User extends Conexao
             if ($user_id <= 0) {
                 return ['errorMessage' => 'ID de usuário inválido'];
             }
-
-            // Verifica se o usuário existe
-            $find_user = $this->db->prepare("SELECT * FROM usuario WHERE cd_usuario = ?");
-            $find_user->execute([$user_id]);
-
-            if ($find_user->rowCount() === 1) {
-                // Exclui o usuário do banco de dados
-                $delete_user = $this->db->prepare("DELETE FROM usuario WHERE cd_usuario = ?");
-                $delete_user->execute([$user_id]);
-
+    
+            // Exclui o usuário do banco de dados
+            $delete_user = $this->db->prepare("DELETE FROM usuario WHERE id = ?");
+            $delete_user->execute([$user_id]);
+    
+            if ($delete_user->rowCount() === 1) {
                 return ['successMessage' => 'Usuário excluído com sucesso'];
             } else {
                 return ['errorMessage' => 'Usuário não encontrado'];
@@ -164,11 +162,12 @@ class User extends Conexao
             die($e->getMessage());
         }
     }
+    
 
     function procurar_user_por_id($id)
     {
         try {
-            $find_user = $this->db->prepare("SELECT * FROM usuario WHERE cd_usuario = ?");
+            $find_user = $this->db->prepare("SELECT * FROM usuario WHERE id = ?");
             $find_user->execute([$id]);
             if ($find_user->rowCount() === 1) {
                 return $find_user->fetch(PDO::FETCH_OBJ);
@@ -176,6 +175,23 @@ class User extends Conexao
                 return false;
             }
         } catch (PDOException $e) {
+            die($e->getMessage());
+        }
+    }
+
+     // FETCH ALL USERS WHERE ID IS NOT EQUAL TO MY ID
+     function all_users($id){
+        try{
+            $get_users = $this->db->prepare("SELECT nm_usuario, ds_senha, cd_usuario FROM usuario WHERE id != ?");
+            $get_users->execute([$id]);
+            if($get_users->rowCount() > 0){
+                return $get_users->fetchAll(PDO::FETCH_OBJ);
+            }
+            else{
+                return false;
+            }
+        }
+        catch (PDOException $e) {
             die($e->getMessage());
         }
     }
