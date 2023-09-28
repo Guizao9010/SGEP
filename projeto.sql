@@ -1,6 +1,7 @@
 CREATE TABLE USUARIO  
-(  
- ds_email VARCHAR(50) PRIMARY KEY,   
+(
+ id INTEGER PRIMARY KEY AUTOINCREMENT
+ ds_email VARCHAR(50) NOT NULL,   
  nm_usuario VARCHAR(50) NOT NULL,   
  ds_senha VARCHAR(50) NOT NULL,
  cd_usuario CHAR(8) NOT NULL,
