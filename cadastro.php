@@ -2,10 +2,17 @@
 require "src/controller/user.php";
 $user_obj = new User();
 // Se o usuario requisitar o Cadastro
-if(isset($_POST['email']) && isset($_POST['senha']) && isset($_POST['nome']) && isset($_POST['idUsuario'])){
-  $user_obj->cadastroUser($_POST['nome'],$_POST['email'],$_POST['senha'],$_POST['idUsuario']);
+if (isset($_POST['email']) && isset($_POST['senha']) && isset($_POST['nome']) && isset($_POST['idUsuario'])) {
+    $result = $user_obj->cadastroUser($_POST['nome'], $_POST['email'], $_POST['senha'], $_POST['idUsuario']);
+    if (isset($result['successMessage'])) {
+        $successMessage = $result['successMessage'];
+    }
+    if (isset($result['errorMessage'])) {
+        $errorMessage = $result['errorMessage'];
+    }
 }
 
+$user_data = $user_obj->procurar_user_por_id($_SESSION['user_id']);
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -15,53 +22,75 @@ if(isset($_POST['email']) && isset($_POST['senha']) && isset($_POST['nome']) && 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.7/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="src/css/dashboard.css">
     <title>Cadastro</title>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg nav-color">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="admDashboard.php">SGEP</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="admDashboard.php">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="cadastro.php">Cadastrar cliente</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="logout.php">Sair</a>
-                    </li>
-                </ul>
+    <span class="absolute text-white text-4xl top-5 left-4 cursor-pointer" onclick="openSidebar()">
+        <i class="bi bi-filter-left px-2 bg-gray-900 rounded-md"></i>
+    </span>
+    <div class="flex">
+        <div class="sidebar fixed top-0 bottom-0 lg:left-0 p-2 w-[300px] overflow-y-auto text-center bg-gray-900 sidebar-container">
+            <div class="text-gray-100 text-xl">
+                <div class="p-2.5 mt-1 flex items-center">
+                    <h1 class="font-bold text-gray-200 text-[15px] ml-3">SGEP</h1>
+                    <i class="bi bi-x cursor-pointer ml-28 lg:hidden" onclick="openSidebar()"></i>
+                </div>
+                <div class="my-2 bg-gray-600 h-[1px]"></div>
+            </div>
+            <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer text-white">
+                <i class="bi bi-person-circle"></i>
+                <span class="text-[15px] ml-4 text-gray-200 font-bold"><?php echo $user_data->nm_usuario ?></span>
+            </div>
+            <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
+                <i class="bi bi-house-door-fill"></i>
+                <a href="admDashboard.php"><span class="text-[15px] ml-4 text-gray-200 font-bold">Home</span></a>
+            </div>
+            <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
+                <i class="bi bi-file-earmark-text-fill"></i>
+                <a href="cadastro.php"><span class="text-[15px] ml-4 text-gray-200 font-bold">Cadastro</span></a>
+            </div>
+            <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white" style="position: absolute; bottom: 0; left: 0;">
+                <i class="bi bi-box-arrow-in-right"></i>
+                <a href="logout.php"><span class="text-[15px] ml-4 text-gray-200 font-bold">Logout</span></a>
             </div>
         </div>
-    </nav>
-    <div class="container-fluid">
-        <form action="" method="POST">
-        <div class="mb-3">
-                <label for="nomeUsuario" class="form-label">Nome:</label>
-                <input type="text" class="form-control" id="nomeUsuario" name="nome">
-            </div>
-            <div class="mb-3">
-                <label for="emailUsuario" class="form-label">Email:</label>
-                <input type="text" class="form-control" id="emailUsuario" name="email">
-            </div>
-            <div class="mb-3">
-                <label for="senhaUsuario" class="form-label">Senha:</label>
-                <input type="password" class="form-control" id="senhaUsuario" name="senha">
-            </div>            
-            <div class="mb-3">
-                <label for="emailUsuario" class="form-label">Codigo:</label>
-                <input type="text" class="form-control" id="idUsuario" name="idUsuario">
-                <button type="submit" class="btn btn-primary" name="logar">Cadastrar
-
-                </button>
-            </div>
-        </form>
     </div>
-
+    <div class="flex-1 ml-64 p-9"> <!-- Adjust the ml-64 to create space between sidebar and table -->
+        <div class="relative overflow-x-auto form-container">
+            <h1 style="font: 700 30px 'Montserrat', sans-serif; margin-bottom: 20px;">CADASTRO DE CLIENTES</h1>
+            <form action="" method="POST">
+                <div class="mb-6">
+                    <label for="nome" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nome</label>
+                    <input type="text" id="nome" name="nome" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" required>
+                </div>
+                <div class="mb-6">
+                    <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                    <input type="email" id="email" name="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@email.com" required>
+                </div>
+                <div class="mb-6">
+                    <label for="codigo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Código</label>
+                    <input type="text" id="codigo" name="idUsuario" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="AD001" required>
+                </div>
+                <div class="mb-6">
+                    <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Senha</label>
+                    <input type="password" id="password" name="senha" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                </div>
+                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Cadastar</button>
+            </form>           
+        </div>
+    </div>
+    <?php
+            if (isset($result['errorMessage'])) {
+                echo '<center><p class="errorMsg">' . $result['errorMessage'] . '</p></center>';
+            }
+            if (isset($result['successMessage'])) {
+                echo '<center><p class="successMsg">' . $result['successMessage'] . '</p></center>';
+            }
+            ?>
+    <script type="text/javascript" src="src/js/dashboard.js"></script>
 </body>
 </html>
