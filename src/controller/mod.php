@@ -6,6 +6,7 @@ class Mod extends Conexao
     protected $db;
     protected $mod_name;
     protected $mod_description;
+    protected $mod_id;
     function __construct()
     {
         parent::__construct();
@@ -20,6 +21,13 @@ class Mod extends Conexao
         return $mod;
     }
 
+    function listarModalidade($id)
+    {
+        $dados = $this->db->query("SELECT * FROM modalidade WHERE id_modalidade = " . $id);
+        $mod = $dados->fetchAll(PDO::FETCH_ASSOC);
+        return $mod;
+    }
+
     function cadastroMod($modName, $modDescription)
     {
         try {
@@ -27,19 +35,19 @@ class Mod extends Conexao
             $this->mod_description = trim($modDescription);
 
             if (!empty($this->mod_name) && !empty($this->mod_description)) {
-                    $check_name = $this->db->prepare("SELECT * FROM modalidade WHERE nm_modalidade = ?");
+                $check_name = $this->db->prepare("SELECT * FROM modalidade WHERE nm_modalidade = ?");
 
-                    if ($check_name->rowCount() > 0) {
-                        return ['errorMessage' => 'Este nome já está registrado. Tente outro.'];
-                    } else {
-                        $sql = "INSERT INTO modalidade (nm_modalidade, ds_modalidade) VALUES(:modName, :modDescription)";
-                        $sign_up_stmt = $this->db->prepare($sql);
-                        //BIND VALUES
-                        $sign_up_stmt->bindValue(':modName', htmlspecialchars($this->mod_name), PDO::PARAM_STR);
-                        $sign_up_stmt->bindValue(':modDescription', htmlspecialchars($this->mod_description), PDO::PARAM_STR);
-                        $sign_up_stmt->execute();
-                        return ['successMessage' => 'Modalidade cadastrada com sucesso.'];
-                    }
+                if ($check_name->rowCount() > 0) {
+                    return ['errorMessage' => 'Este nome já está registrado. Tente outro.'];
+                } else {
+                    $sql = "INSERT INTO modalidade (nm_modalidade, ds_modalidade) VALUES(:modName, :modDescription)";
+                    $sign_up_stmt = $this->db->prepare($sql);
+                    //BIND VALUES
+                    $sign_up_stmt->bindValue(':modName', htmlspecialchars($this->mod_name), PDO::PARAM_STR);
+                    $sign_up_stmt->bindValue(':modDescription', htmlspecialchars($this->mod_description), PDO::PARAM_STR);
+                    $sign_up_stmt->execute();
+                    return ['successMessage' => 'Modalidade cadastrada com sucesso.'];
+                }
             } else {
                 return ['errorMessage' => 'Preencha todos os campos.'];
             }
@@ -60,35 +68,37 @@ class Mod extends Conexao
 
             $this->mod_name = trim($modName);
             $this->mod_description = trim($modDescription);
-            $this->id_user = trim($idMod);
+            $this->mod_id = trim($idMod);
 
             $check_name = $this->db->prepare("SELECT * FROM modalidade WHERE nm_modalidade = ?");
+            $check_name->execute([$modName]);
 
             if ($check_name->rowCount() > 0) {
                 return ['errorMessage' => 'Este nome já está registrado. Tente outro.'];
             } else {
 
-            
 
-            // Verifica se a modalidade existe
-            $find_mod = $this->db->prepare("SELECT * FROM modalidade WHERE id_modalidade = ?");
-            $find_mod->execute([$id]);
 
-            if ($find_mod->rowCount() === 1) {
-                // Atualiza os dados da modalidade
-                $sql = "UPDATE modalidade SET nm_modalidade = :modName, ds_modalidade = :modDescription WHERE id_modalidade = :idMod";
+                // Verifica se a modalidade existe
+                $find_mod = $this->db->prepare("SELECT * FROM modalidade WHERE id_modalidade = ?");
+                $find_mod->execute([$id]);
 
-                $update_stmt = $this->db->prepare($sql);
-                // Atribui os valores a serem atualizados
-                $update_stmt->bindValue(':modName', htmlspecialchars($this->mod_name), PDO::PARAM_STR);
-                $update_stmt->bindValue(':modDescription', htmlspecialchars($this->mod_description), PDO::PARAM_STR);
-                $update_stmt->execute();
+                if ($find_mod->rowCount() === 1) {
+                    // Atualiza os dados da modalidade
+                    $sql = "UPDATE modalidade SET nm_modalidade = :modName, ds_modalidade = :modDescription WHERE id_modalidade = :modId";
 
-                return ['successMessage' => 'Informações da Modalidade atualizadas com sucesso'];
-            } else {
-                return ['errorMessage' => 'Modalidade não encontrada'];
+                    $update_stmt = $this->db->prepare($sql);
+                    // Atribui os valores a serem atualizados
+                    $update_stmt->bindValue(':modName', htmlspecialchars($this->mod_name), PDO::PARAM_STR);
+                    $update_stmt->bindValue(':modDescription', htmlspecialchars($this->mod_description), PDO::PARAM_STR);
+                    $update_stmt->bindValue(':modId', htmlspecialchars($this->mod_id), PDO::PARAM_STR);
+                    $update_stmt->execute();
+
+                    return ['successMessage' => 'Informações da Modalidade atualizadas com sucesso'];
+                } else {
+                    return ['errorMessage' => 'Modalidade não encontrada'];
+                }
             }
-        }
         } catch (PDOException $e) {
             die($e->getMessage());
         }
@@ -102,11 +112,11 @@ class Mod extends Conexao
             if ($mod_id <= 0) {
                 return ['errorMessage' => 'ID da Modalidade inválido'];
             }
-    
+
             // Exclui a modalidade do banco de dados
             $delete_mod = $this->db->prepare("DELETE FROM modalidade WHERE id_modalidade = ?");
             $delete_mod->execute([$mod_id]);
-    
+
             if ($delete_mod->rowCount() === 1) {
                 return ['successMessage' => 'Modalidade excluída com sucesso'];
             } else {
@@ -116,7 +126,7 @@ class Mod extends Conexao
             die($e->getMessage());
         }
     }
-    
+
 
     function procurar_mod_por_id($id)
     {
@@ -133,20 +143,18 @@ class Mod extends Conexao
         }
     }
 
-    function mod_existe($id){
-        try{
+    function mod_existe($id)
+    {
+        try {
             $get_mods = $this->db->prepare("SELECT * FROM modalidade WHERE id_modalidade = ?");
             $get_mods->execute([$id]);
-            if($get_mods->rowCount() > 0){
+            if ($get_mods->rowCount() > 0) {
                 return true;
-            }
-            else{
+            } else {
                 return false;
             }
-        }
-        catch (PDOException $e) {
+        } catch (PDOException $e) {
             die($e->getMessage());
         }
     }
-
 }
