@@ -150,13 +150,15 @@ class User extends Conexao
 
             if ($find_user->rowCount() === 1) {
                 // Atualiza os dados do usuário
+                $this->hash_pass = password_hash($this->user_pass, PASSWORD_DEFAULT);
                 $sql = "UPDATE usuario SET nm_usuario = :username, ds_email = :user_email, ds_senha = :user_pass, cd_usuario = :idUser WHERE id = :id";
-
                 $update_stmt = $this->db->prepare($sql);
+
+                
                 // Atribui os valores a serem atualizados
                 $update_stmt->bindValue(':username', htmlspecialchars($this->user_name), PDO::PARAM_STR);
                 $update_stmt->bindValue(':user_email', $this->user_email, PDO::PARAM_STR);
-                $update_stmt->bindValue(':user_pass', $this->user_pass, PDO::PARAM_STR);
+                $update_stmt->bindValue(':user_pass', $this->hash_pass, PDO::PARAM_STR);
                 $update_stmt->bindValue(':idUser', $this->id_user, PDO::PARAM_STR);
                 $update_stmt->bindValue(':id', $id, PDO::PARAM_INT);
                 $update_stmt->execute();
