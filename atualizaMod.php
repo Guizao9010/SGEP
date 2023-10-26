@@ -1,14 +1,13 @@
 <?php
-require_once "src/controller/user.php";
-$user_obj = new User();
-$user_data = $user_obj->procurar_user_por_id($_SESSION['user_id']);
+require_once "src/controller/mod.php";
+$mod_obj = new Mod();
+$mod_data = $mod_obj->procurar_mod_por_id($_SESSION['user_id']);
 
-if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id']) && is_numeric($_GET['id'])) {
-    $id = intval($_GET['id']);
+if (isset($_GET['id']) && is_numeric($_GET['id'])) {
+    $id = $_GET['id'];
+    $modExistence = $mod_data->procurar_mod_por_id($id);
 
-    $userExistente = $user_obj->all_users($id);
-
-    if ($userExistente) {
+    if ($modExistence) {
         // Exiba o formulário de atualização com os dados atuais do pet
         // Certifique-se de preencher os campos do formulário com os dados atuais do pet
 ?>
@@ -25,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id']) && is_numeric($_GE
             <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" />
             <link rel="stylesheet" href="src/css/dashboard.css">
-            <title>Cadastro</title>
+            <title>Atualizar Modalidade</title>
         </head>
 
         <body bgcolor="#F9F6ED">
@@ -69,47 +68,37 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id']) && is_numeric($_GE
     </div>
             <div class="flex-1 ml-64 p-9"> <!-- Adjust the ml-64 to create space between sidebar and table -->
                 <div class="relative overflow-x-auto form-container">
-                    <h1 style="font: 700 30px 'Montserrat', sans-serif; margin-bottom: 20px;">ATUALIZAÇÃO DO CADASTRO</h1>
+                    <h1 style="font: 700 30px 'Montserrat', sans-serif; margin-bottom: 20px;">ATUALIZAÇÃO DA MODALIDADE</h1>
                     <form action="" method="POST">
-                        <div class="mb-6">
-                            <input type="hidden" name="id" value="<?= $id ?>">
-                            <label for="nome" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nome</label>
-                            <input type="text" id="nome" name="nome" value="<?= $userExistente['nm_usuario'] ?>" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" required>
-                        </div>
-                        <div class="mb-6">
-                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                            <input type="email" id="email" name="email" value="<?= $userExistente['ds_email'] ?>" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@email.com" required>
-                        </div>
-                        <div class="mb-6">
-                            <label for="codigo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Código</label>
-                            <input type="text" id="codigo" name="idUsuario" value="<?= $userExistente['cd_usuario'] ?>" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="AD001" required>
-                        </div>
-                        <div class="mb-6">
-                            <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Senha</label>
-                            <input type="password" id="password" name="senha" value="<?= $userExistente['ds_senha'] ?>" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
-                        </div>
-                        <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Cadastar</button>
-                    </form>
+                <div class="mb-6">
+                <input type="hidden" name="id" value="<?= $id ?>">
+                    <label for="nome" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nome</label>
+                    <input type="text" id="nome" name="nome" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" required>
+                </div>
+                <div class="mb-6">
+                    <label for="descricao" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descrição</label>
+                    <input type="text" id="descricao" name="descricao" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" required>
+                </div>
+                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Atualizar</button>
+            </form>   
                 </div>
             </div>
     <?php
     } else {
-        echo "Pet não encontrado.";
+        echo "Modalidade não encontrada.";
     }
 } elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Processar a submissão do formulário de atualização
     $id = $_POST['id'];
-    $username = $_POST['nome'];
-    $email = $_POST['email'];
-    $user_id = $_POST['idUsuario'];
-    $password = $_POST['senha'];
+    $modName = $_POST['nome'];
+    $modDescription = $_POST['descricao'];
 
-    $animal = new User();
-    $resultadoAtualizacao = $animal->atualizarUsuario($id, $username, $email, $password, $user_id);
-    header('Location: admDashboard.php');
+    $mod = new Mod();
+    $resultadoAtualizacao = $mod->atualizarMod($id, $modName, $modDescription);
+    header('Location: modalidades.php');
     exit;
 } else {
-    echo "ID de pet inválido.";
+    echo "ID de Modalidade inválido.";
 }
     ?>
         </body>

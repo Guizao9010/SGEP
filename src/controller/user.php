@@ -8,7 +8,7 @@ class User extends Conexao
     protected $user_email;
     protected $user_pass;
     protected $id_user;
-
+    protected $hash_pass;
     function __construct()
     {
         parent::__construct();
@@ -39,13 +39,14 @@ class User extends Conexao
                     if ($check_email->rowCount() > 0) {
                         return ['errorMessage' => 'Este email já está registrado. Tente outro.'];
                     } else {
+                        $this->hash_pass = password_hash($this->user_pass, PASSWORD_DEFAULT);
                         $sql = "INSERT INTO usuario (ds_email, nm_usuario, ds_senha, cd_usuario) VALUES(:user_email, :username, :user_pass, :id_user)";
 
                         $sign_up_stmt = $this->db->prepare($sql);
                         //BIND VALUES
                         $sign_up_stmt->bindValue(':username', htmlspecialchars($this->user_name), PDO::PARAM_STR);
                         $sign_up_stmt->bindValue(':user_email', $this->user_email, PDO::PARAM_STR);
-                        $sign_up_stmt->bindValue(':user_pass', $this->user_pass, PDO::PARAM_STR);
+                        $sign_up_stmt->bindValue(':user_pass', $this->hash_pass);
                         $sign_up_stmt->bindValue(':id_user', $this->id_user, PDO::PARAM_STR);
                         $sign_up_stmt->execute();
                         return ['successMessage' => 'Cadastrado com sucesso.'];
@@ -120,13 +121,14 @@ class User extends Conexao
 
             if ($find_user->rowCount() === 1) {
                 // Atualiza os dados do usuário
+                $this->hash_pass = password_hash($this->user_pass, PASSWORD_DEFAULT);
                 $sql = "UPDATE usuario SET nm_usuario = :username, ds_email = :user_email, ds_senha = :user_pass, cd_usuario = :idUser WHERE id = :id";
 
                 $update_stmt = $this->db->prepare($sql);
                 // Atribui os valores a serem atualizados
                 $update_stmt->bindValue(':username', htmlspecialchars($this->user_name), PDO::PARAM_STR);
                 $update_stmt->bindValue(':user_email', $this->user_email, PDO::PARAM_STR);
-                $update_stmt->bindValue(':user_pass', $this->user_pass, PDO::PARAM_STR);
+                $update_stmt->bindValue(':user_pass', $this->hash_pass);
                 $update_stmt->bindValue(':idUser', $this->id_user, PDO::PARAM_STR);
                 $update_stmt->bindValue(':id', $id, PDO::PARAM_INT);
                 $update_stmt->execute();

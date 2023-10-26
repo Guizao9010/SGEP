@@ -50,6 +50,14 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
                 <i class="bi bi-file-earmark-text-fill"></i>
                 <a href="cadastro.php"><span class="text-[15px] ml-4 text-gray-200 font-bold">Cadastro</span></a>
             </div>
+            <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
+                <i class="bi bi-file-earmark-text-fill"></i>
+                <a href="modalidades.php"><span class="text-[15px] ml-4 text-gray-200 font-bold">Modalidades</span></a>
+            </div>
+            <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
+                <i class="bi bi-file-earmark-text-fill"></i>
+                <a href="cadastroModalidade.php"><span class="text-[15px] ml-4 text-gray-200 font-bold">Adicionar Modalidade</span></a>
+            </div>
             <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white" style="position: absolute; bottom: 0; left: 0;">
                 <i class="bi bi-box-arrow-in-right"></i>
                 <a href="logout.php"><span class="text-[15px] ml-4 text-gray-200 font-bold">Logout</span></a>

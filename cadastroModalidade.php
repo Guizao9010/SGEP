@@ -1,9 +1,9 @@
 <?php
-require "src/controller/user.php";
-$user_obj = new User();
-// Se o usuario requisitar o Cadastro
-if (isset($_POST['email']) && isset($_POST['senha']) && isset($_POST['nome']) && isset($_POST['idUsuario'])) {
-    $result = $user_obj->cadastroUser($_POST['nome'], $_POST['email'], $_POST['senha'], $_POST['idUsuario']);
+require "src/controller/mod.php";
+$mod_obj = new Mod();
+// Se o usuario requisitar o Cadastro de Modalidade
+if (isset($_POST['nome']) && isset($_POST['descricao'])) {
+    $result = $mod_obj->cadastroMod($_POST['nome'], $_POST['descricao']);
     if (isset($result['successMessage'])) {
         $successMessage = $result['successMessage'];
     }
@@ -11,8 +11,6 @@ if (isset($_POST['email']) && isset($_POST['senha']) && isset($_POST['nome']) &&
         $errorMessage = $result['errorMessage'];
     }
 }
-
-$user_data = $user_obj->procurar_user_por_id($_SESSION['user_id']);
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -26,7 +24,7 @@ $user_data = $user_obj->procurar_user_por_id($_SESSION['user_id']);
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" />
     <link rel="stylesheet" href="src/css/dashboard.css">
-    <title>Cadastro</title>
+    <title>Adicionar Modalidade</title>
 </head>
 <body>
     <span class="absolute text-white text-4xl top-5 left-4 cursor-pointer" onclick="openSidebar()">
@@ -57,6 +55,10 @@ $user_data = $user_obj->procurar_user_por_id($_SESSION['user_id']);
                 <i class="bi bi-file-earmark-text-fill"></i>
                 <a href="modalidades.php"><span class="text-[15px] ml-4 text-gray-200 font-bold">Modalidades</span></a>
             </div>
+            <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
+                <i class="bi bi-file-earmark-text-fill"></i>
+                <a href="cadastroModalidade.php"><span class="text-[15px] ml-4 text-gray-200 font-bold">Adicionar Modalidade</span></a>
+            </div>
             <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white" style="position: absolute; bottom: 0; left: 0;">
                 <i class="bi bi-box-arrow-in-right"></i>
                 <a href="logout.php"><span class="text-[15px] ml-4 text-gray-200 font-bold">Logout</span></a>
@@ -65,25 +67,17 @@ $user_data = $user_obj->procurar_user_por_id($_SESSION['user_id']);
     </div>
     <div class="flex-1 ml-64 p-9"> <!-- Adjust the ml-64 to create space between sidebar and table -->
         <div class="relative overflow-x-auto form-container">
-            <h1 style="font: 700 30px 'Montserrat', sans-serif; margin-bottom: 20px;">CADASTRO DE CLIENTES</h1>
+            <h1 style="font: 700 30px 'Montserrat', sans-serif; margin-bottom: 20px;">CADASTRO DE MODALIDADE</h1>
             <form action="" method="POST">
                 <div class="mb-6">
                     <label for="nome" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nome</label>
                     <input type="text" id="nome" name="nome" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" required>
                 </div>
                 <div class="mb-6">
-                    <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                    <input type="email" id="email" name="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@email.com" required>
+                    <label for="descricao" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descrição</label>
+                    <input type="text" id="descricao" name="descricao" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" required>
                 </div>
-                <div class="mb-6">
-                    <label for="codigo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Código</label>
-                    <input type="text" id="codigo" name="idUsuario" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="AD001" required>
-                </div>
-                <div class="mb-6">
-                    <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Senha</label>
-                    <input type="password" id="password" name="senha" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
-                </div>
-                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Cadastar</button>
+                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Adicionar</button>
             </form>           
         </div>
     </div>
