@@ -1,3 +1,7 @@
+create database DB_SGEP;
+
+use DB_SGEP;
+
 CREATE TABLE USUARIO  
 (
  id INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -41,21 +45,21 @@ CREATE TABLE UNIDADE
 
 CREATE TABLE EVENTO_MODALIDADE  
 (  
- id_evento INTEGER AUTO_INCREMENT,   
+ id_evento INTEGER,   
  id_modalidade INTEGER,   
  qt_modalidade INTEGER NOT NULL 
 );
 
 CREATE TABLE NOTICIA_MODALIDADE  
 (  
- id_modalidade INTEGER AUTO_INCREMENT,   
+ id_modalidade INTEGER,   
  id_noticia INTEGER,   
  qt_modalidade INTEGER NOT NULL 
 );
 
 CREATE TABLE UNIDADE_MODALIDADE  
 (  
- id_unidade INTEGER AUTO_INCREMENT,   
+ id_unidade INTEGER,   
  id_modalidade INTEGER,   
  qt_modalidade INTEGER NOT NULL 
 );
@@ -80,3 +84,4 @@ ALTER TABLE UNIDADE_MODALIDADE ADD CONSTRAINT modalidade_unidade_fk FOREIGN KEY(
 
 ALTER TABLE UNIDADE_MODALIDADE ADD CONSTRAINT unidade_modalidade_pk PRIMARY KEY(id_modalidade, id_unidade);
 
+INSERT INTO usuario(ds_email, nm_usuario, ds_senha, cd_usuario, sg_tipo) VALUES ('admin@admin.com','Admin','123','SP','ADMIN');
