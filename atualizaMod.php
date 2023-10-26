@@ -1,13 +1,12 @@
 <?php
 require_once "src/controller/mod.php";
 $mod_obj = new Mod();
-$mod_data = $mod_obj->procurar_mod_por_id($_SESSION['user_id']);
 
-if (isset($_GET['id']) && is_numeric($_GET['id'])) {
+if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id']) && is_numeric($_GET['id'])) {
     $id = $_GET['id'];
-    $modExistence = $mod_data->procurar_mod_por_id($id);
+    $modExistente = $mod_obj->mod_existe($id);
 
-    if ($modExistence) {
+    if ($modExistente) {
         // Exiba o formulário de atualização com os dados atuais do pet
         // Certifique-se de preencher os campos do formulário com os dados atuais do pet
 ?>

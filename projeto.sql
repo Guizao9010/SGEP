@@ -19,43 +19,43 @@ CREATE TABLE EVENTO
 
 CREATE TABLE MODALIDADE  
 (  
- id_modalidade INTEGER PRIMARY KEY,   
+ id_modalidade INTEGER PRIMARY KEY AUTO_INCREMENT,   
  nm_modalidade VARCHAR(50) NOT NULL,   
  ds_modalidade VARCHAR(100) NOT NULL  
 );
 
 CREATE TABLE NOTICIA  
 (  
- id_noticia INTEGER PRIMARY KEY,   
+ id_noticia INTEGER PRIMARY KEY AUTO_INCREMENT,   
  ds_conteudo VARCHAR(100) NOT NULL,   
  dt_noticia DATE NOT NULL 
 );
 
 CREATE TABLE UNIDADE  
 (  
- nm_unidade VARCHAR(50) NOT NULL,   
+ nm_unidade VARCHAR(50) NOT NULL ,   
  ds_endereco VARCHAR(100) NOT NULL,   
  ds_unidadade VARCHAR(100) NOT NULL,   
- id_unidade INTEGER PRIMARY KEY 
+ id_unidade INTEGER PRIMARY KEY AUTO_INCREMENT
 );
 
 CREATE TABLE EVENTO_MODALIDADE  
 (  
- id_evento INTEGER,   
+ id_evento INTEGER AUTO_INCREMENT,   
  id_modalidade INTEGER,   
  qt_modalidade INTEGER NOT NULL 
 );
 
 CREATE TABLE NOTICIA_MODALIDADE  
 (  
- id_modalidade INTEGER,   
+ id_modalidade INTEGER AUTO_INCREMENT,   
  id_noticia INTEGER,   
  qt_modalidade INTEGER NOT NULL 
 );
 
 CREATE TABLE UNIDADE_MODALIDADE  
 (  
- id_unidade INTEGER,   
+ id_unidade INTEGER AUTO_INCREMENT,   
  id_modalidade INTEGER,   
  qt_modalidade INTEGER NOT NULL 
 );

@@ -36,7 +36,7 @@ class Mod extends Conexao
                         $sign_up_stmt = $this->db->prepare($sql);
                         //BIND VALUES
                         $sign_up_stmt->bindValue(':modName', htmlspecialchars($this->mod_name), PDO::PARAM_STR);
-                        $sign_up_stmt->bindValue(':modDescription', $this->mod_description, PDO::PARAM_STR);
+                        $sign_up_stmt->bindValue(':modDescription', htmlspecialchars($this->mod_description), PDO::PARAM_STR);
                         $sign_up_stmt->execute();
                         return ['successMessage' => 'Modalidade cadastrada com sucesso.'];
                     }
@@ -76,12 +76,12 @@ class Mod extends Conexao
 
             if ($find_mod->rowCount() === 1) {
                 // Atualiza os dados da modalidade
-                $sql = "UPDATE modalidade SET nm_modalidade = :modName, ds_modalidade = :modDescription WHERE id_modalidade = :id";
+                $sql = "UPDATE modalidade SET nm_modalidade = :modName, ds_modalidade = :modDescription WHERE id_modalidade = :idMod";
 
                 $update_stmt = $this->db->prepare($sql);
                 // Atribui os valores a serem atualizados
                 $update_stmt->bindValue(':modName', htmlspecialchars($this->mod_name), PDO::PARAM_STR);
-                $update_stmt->bindValue(':modDescription', $this->mod_description, PDO::PARAM_STR);
+                $update_stmt->bindValue(':modDescription', htmlspecialchars($this->mod_description), PDO::PARAM_STR);
                 $update_stmt->execute();
 
                 return ['successMessage' => 'Informações da Modalidade atualizadas com sucesso'];
@@ -129,6 +129,22 @@ class Mod extends Conexao
                 return false;
             }
         } catch (PDOException $e) {
+            die($e->getMessage());
+        }
+    }
+
+    function mod_existe($id){
+        try{
+            $get_mods = $this->db->prepare("SELECT * FROM modalidade WHERE id_modalidade = ?");
+            $get_mods->execute([$id]);
+            if($get_mods->rowCount() > 0){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        catch (PDOException $e) {
             die($e->getMessage());
         }
     }
