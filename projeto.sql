@@ -84,4 +84,4 @@ ALTER TABLE UNIDADE_MODALIDADE ADD CONSTRAINT modalidade_unidade_fk FOREIGN KEY(
 
 ALTER TABLE UNIDADE_MODALIDADE ADD CONSTRAINT unidade_modalidade_pk PRIMARY KEY(id_modalidade, id_unidade);
 
-INSERT INTO usuario(ds_email, nm_usuario, ds_senha, cd_usuario, sg_tipo) VALUES ('admin@admin.com','Admin','123','SP','ADMIN');
+INSERT INTO usuario(ds_email, nm_usuario, ds_senha, cd_usuario, sg_tipo) VALUES ('admin@admin.com','Admin','$2y$10$laqmLeKYBxVBh1xJpIJgl.5TXqJfE24US.EjvGOnn4.rN3JkJXveK','SP','ADMIN'); --a senha é 123
