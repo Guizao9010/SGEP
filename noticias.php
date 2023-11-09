@@ -16,7 +16,7 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="pt-br">
+<html>
 
 <head>
     <meta charset="UTF-8" />
@@ -37,7 +37,7 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
             </a>
             <div class="flex items-center md:order-2">
                 <button type="button" class="flex mr-3 text-sm" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
-                    <span class="sr-only">Abrir menu</span>
+                    <span class="sr-only">Open user menu</span>
                     <?php echo $user_data->nm_usuario ?>
                 </button>
                 <!-- Dropdown menu -->
@@ -53,7 +53,7 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
                     </ul>
                 </div>
                 <button data-collapse-toggle="navbar-user" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-user" aria-expanded="false">
-                    <span class="sr-only">Abrir menu</span>
+                    <span class="sr-only">Open main menu</span>
                     <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15" />
                     </svg>
@@ -77,35 +77,24 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
             </div>
         </div>
     </nav>
-    <div class="flex-1 ml-64 p-20" style="display: flex; flex-direction: row; margin: 5px; flex-wrap: wrap;">
-
-        <?php foreach ($list_mods as $mod) : ?>
-
-            <div class="relative flex w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md" style="margin: 5px; flex-basis: calc(25% - 10px);">
-                <?php $mod_id = $mod["id_modalidade"]; ?>
-                <div class="p-6">
-                    <h5 class="mb-2 block font-sans text-xl font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased">
-                        <?= $mod["nm_modalidade"] ?>
-                    </h5>
-                    <p class="block font-sans text-base font-light leading-relaxed text-inherit antialiased">
-                        <?= $mod["ds_modalidade"] ?>
-                    </p>
-                </div>
-                <div class="p-6 pt-0">
-                    <a href="atualizaMod.php?id=<?= $mod['id_modalidade'] ?>">
-                        <button class="edit-button select-none rounded-lg bg-blue-500 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button" data-ripple-light="true">
-                            Editar
-                        </button>
-                    </a>
-                    <a href="deleteMod.php?id=<?= $mod['id_modalidade'] ?>">
-                        <button class="delete-button select-none rounded-lg bg-blue-500 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button" data-ripple-light="true">
-                            Apagar
-                        </button>
-                    </a>
-                </div>
+    <div style="display:flex; grid-column: 2; margin-left:5px;">
+        <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+            <a href="#">
+                <img class="rounded-t-lg" src="https://img.freepik.com/fotos-gratis/o-homem-idoso-esta-usando-o-telefone-movel_53876-30130.jpg?w=1380&t=st=1698343354~exp=1698343954~hmac=fa48e60536b16a3a6627d8e34b1e9de762444b9c503c60222d5ec0cb2a16dc36" alt="" />
+            </a>
+            <div class="p-5">
+                <a href="#">
+                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Notícias</h5>
+                </a>
+                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Nao sei ainda o que vai ser aqui</p>
+                <a href="#" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    Saiba mais
+                    <svg class="w-3.5 h-3.5 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
+                    </svg>
+                </a>
             </div>
-        <?php endforeach; ?>
-
+        </div>        
     </div>
 
     <div data-dial-init class="fixed right-6 bottom-6 group">
@@ -151,6 +140,8 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
             <span class="sr-only">Abrir menu</span>
         </button>
     </div>
-<script src="src/js/speedDial.js"></script>
+    <script src="src/js/speedDial.js"></script>
+
 </body>
+
 </html>
