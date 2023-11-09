@@ -1,7 +1,3 @@
-create database DB_SGEP;
-
-use DB_SGEP;
-
 CREATE TABLE USUARIO  
 (
  id INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -14,33 +10,37 @@ CREATE TABLE USUARIO
 
 CREATE TABLE EVENTO  
 (  
- id_evento INTEGER PRIMARY KEY NOT NULL,   
+ id_evento INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,   
  nm_evento VARCHAR(50),   
  ds_evento VARCHAR(100) NOT NULL,   
  dt_evento DATE NOT NULL, 
- id_unidade INTEGER 
+ id_unidade INTEGER,
+ id_usuario INTEGER
 );
 
 CREATE TABLE MODALIDADE  
 (  
  id_modalidade INTEGER PRIMARY KEY AUTO_INCREMENT,   
  nm_modalidade VARCHAR(50) NOT NULL,   
- ds_modalidade VARCHAR(100) NOT NULL  
+ ds_modalidade VARCHAR(100) NOT NULL,
+ id_usuario INTEGER  
 );
 
 CREATE TABLE NOTICIA  
 (  
  id_noticia INTEGER PRIMARY KEY AUTO_INCREMENT,   
  ds_conteudo VARCHAR(100) NOT NULL,   
- dt_noticia DATE NOT NULL 
+ dt_noticia DATE NOT NULL,
+ id_usuario INTEGER 
 );
 
 CREATE TABLE UNIDADE  
-(  
- nm_unidade VARCHAR(50) NOT NULL ,   
+( 
+ id_unidade INTEGER PRIMARY KEY AUTO_INCREMENT,    
+ nm_unidade VARCHAR(50) NOT NULL,   
  ds_endereco VARCHAR(100) NOT NULL,   
  ds_unidadade VARCHAR(100) NOT NULL,   
- id_unidade INTEGER PRIMARY KEY AUTO_INCREMENT
+ id_usuario INTEGER 
 );
 
 CREATE TABLE EVENTO_MODALIDADE  
@@ -85,3 +85,4 @@ ALTER TABLE UNIDADE_MODALIDADE ADD CONSTRAINT modalidade_unidade_fk FOREIGN KEY(
 ALTER TABLE UNIDADE_MODALIDADE ADD CONSTRAINT unidade_modalidade_pk PRIMARY KEY(id_modalidade, id_unidade);
 
 INSERT INTO usuario(ds_email, nm_usuario, ds_senha, cd_usuario, sg_tipo) VALUES ('admin@admin.com','Admin','$2y$10$laqmLeKYBxVBh1xJpIJgl.5TXqJfE24US.EjvGOnn4.rN3JkJXveK','SP','ADMIN'); --a senha é 123
+
