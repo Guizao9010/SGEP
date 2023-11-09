@@ -9,7 +9,7 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
         header('Location: logout.php');
         exit;
     }
-    $list_mods = $mod_obj->listarModalidades();
+    $list_mods = $mod_obj->listarModalidadeUsuario($_SESSION['user_id']);
 } else {
     header('Location: logout.php');
     exit;

@@ -100,7 +100,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id']) && is_numeric($_GE
     $modDescription = $_POST['descricao'];
 
     $mod = new Mod();
-    $resultadoAtualizacao = $mod->atualizarMod($id, $modName, $modDescription);
+    $resultadoAtualizacao = $mod->atualizarMod($id, $modName, $modDescription,$_SESSION['user_id']);
     header('Location: modalidades.php');
     exit;
 } else {
