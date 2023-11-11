@@ -14,13 +14,6 @@ class Mod extends Conexao
 
     //MOSTRAR MODALIDADES   
 
-    function listarModalidades()
-    {
-        $dados = $this->db->query("SELECT * FROM modalidade");
-        $mod = $dados->fetchAll(PDO::FETCH_ASSOC);
-        return $mod;
-    }
-
     function listarModalidade($id)
     {
         $dados = $this->db->query("SELECT * FROM modalidade WHERE id_modalidade = " . $id);
@@ -28,7 +21,15 @@ class Mod extends Conexao
         return $mod;
     }
 
-    function cadastroMod($modName, $modDescription)
+    function listarModalidadeUsuario($id)
+    {
+        $dados = $this->db->query("SELECT * FROM modalidade WHERE id_usuario = " . $id);
+        $mod = $dados->fetchAll(PDO::FETCH_ASSOC);
+        return $mod;
+    }
+
+
+    function cadastroMod($modName, $modDescription, $idUsuario)
     {
         try {
             $this->mod_name = trim($modName);
@@ -36,15 +37,16 @@ class Mod extends Conexao
 
             if (!empty($this->mod_name) && !empty($this->mod_description)) {
                 $check_name = $this->db->prepare("SELECT * FROM modalidade WHERE nm_modalidade = ?");
-
+                $check_name->execute([$this->mod_name]);
                 if ($check_name->rowCount() > 0) {
                     return ['errorMessage' => 'Este nome já está registrado. Tente outro.'];
                 } else {
-                    $sql = "INSERT INTO modalidade (nm_modalidade, ds_modalidade) VALUES(:modName, :modDescription)";
+                    $sql = "INSERT INTO modalidade (nm_modalidade, ds_modalidade, id_usuario) VALUES(:modName, :modDescription, :idUsuario)";
                     $sign_up_stmt = $this->db->prepare($sql);
                     //BIND VALUES
                     $sign_up_stmt->bindValue(':modName', htmlspecialchars($this->mod_name), PDO::PARAM_STR);
                     $sign_up_stmt->bindValue(':modDescription', htmlspecialchars($this->mod_description), PDO::PARAM_STR);
+                    $sign_up_stmt->bindValue(':idUsuario', htmlspecialchars($idUsuario), PDO::PARAM_STR);
                     $sign_up_stmt->execute();
                     return ['successMessage' => 'Modalidade cadastrada com sucesso.'];
                 }
@@ -57,10 +59,10 @@ class Mod extends Conexao
     }
 
 
-    function atualizarMod($idMod, $modName, $modDescription)
+    function atualizarMod($idMod, $modName, $modDescription, $userId)
     {
         try {
-            // Verifica se o ID do usuário é válido
+            // Verifica se o ID da Modalidade é válido
             $id = intval($idMod);
             if ($id <= 0) {
                 return ['errorMessage' => 'ID de Modalidade inválido'];
@@ -70,34 +72,34 @@ class Mod extends Conexao
             $this->mod_description = trim($modDescription);
             $this->mod_id = trim($idMod);
 
-            $check_name = $this->db->prepare("SELECT * FROM modalidade WHERE nm_modalidade = ?");
-            $check_name->execute([$modName]);
-
-            if ($check_name->rowCount() > 0) {
-                return ['errorMessage' => 'Este nome já está registrado. Tente outro.'];
-            } else {
-
-
-
-                // Verifica se a modalidade existe
-                $find_mod = $this->db->prepare("SELECT * FROM modalidade WHERE id_modalidade = ?");
-                $find_mod->execute([$id]);
-
-                if ($find_mod->rowCount() === 1) {
-                    // Atualiza os dados da modalidade
-                    $sql = "UPDATE modalidade SET nm_modalidade = :modName, ds_modalidade = :modDescription WHERE id_modalidade = :modId";
-
-                    $update_stmt = $this->db->prepare($sql);
-                    // Atribui os valores a serem atualizados
-                    $update_stmt->bindValue(':modName', htmlspecialchars($this->mod_name), PDO::PARAM_STR);
-                    $update_stmt->bindValue(':modDescription', htmlspecialchars($this->mod_description), PDO::PARAM_STR);
-                    $update_stmt->bindValue(':modId', htmlspecialchars($this->mod_id), PDO::PARAM_STR);
-                    $update_stmt->execute();
-
-                    return ['successMessage' => 'Informações da Modalidade atualizadas com sucesso'];
+            if (!empty($this->mod_name) && !empty($this->mod_description)) {
+                $check_name = $this->db->prepare("SELECT * FROM modalidade WHERE nm_modalidade = ? AND id_modalidade != ? AND id_usuario = ?");
+                $check_name->execute([$this->mod_name, $this->mod_id, $userId]);
+                if ($check_name->rowCount() > 0) {
+                    return ['errorMessage' => 'Este nome já está registrado. Tente outro.'];
                 } else {
-                    return ['errorMessage' => 'Modalidade não encontrada'];
+                    // Verifica se a modalidade existe
+                    $find_mod = $this->db->prepare("SELECT * FROM modalidade WHERE id_modalidade = ?");
+                    $find_mod->execute([$id]);
+
+                    if ($find_mod->rowCount() === 1) {
+                        // Atualiza os dados da modalidade
+                        $sql = "UPDATE modalidade SET nm_modalidade = :modName, ds_modalidade = :modDescription WHERE id_modalidade = :modId";
+
+                        $update_stmt = $this->db->prepare($sql);
+                        // Atribui os valores a serem atualizados
+                        $update_stmt->bindValue(':modName', htmlspecialchars($this->mod_name), PDO::PARAM_STR);
+                        $update_stmt->bindValue(':modDescription', htmlspecialchars($this->mod_description), PDO::PARAM_STR);
+                        $update_stmt->bindValue(':modId', htmlspecialchars($this->mod_id), PDO::PARAM_STR);
+                        $update_stmt->execute();
+
+                        return ['successMessage' => 'Informações da Modalidade atualizadas com sucesso'];
+                    } else {
+                        return ['errorMessage' => 'Modalidade não encontrada'];
+                    }
                 }
+            } else {
+                return ['errorMessage' => 'Preencha todos os campos.'];
             }
         } catch (PDOException $e) {
             die($e->getMessage());

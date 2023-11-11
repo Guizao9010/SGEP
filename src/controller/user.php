@@ -7,8 +7,11 @@ class User extends Conexao
     protected $user_name;
     protected $user_email;
     protected $user_pass;
-    protected $id_user;
     protected $hash_pass;
+    protected $id_user;
+
+    protected $tipo;
+
     function __construct()
     {
         parent::__construct();
@@ -39,7 +42,9 @@ class User extends Conexao
                     if ($check_email->rowCount() > 0) {
                         return ['errorMessage' => 'Este email já está registrado. Tente outro.'];
                     } else {
+
                         $this->hash_pass = password_hash($this->user_pass, PASSWORD_DEFAULT);
+
                         $sql = "INSERT INTO usuario (ds_email, nm_usuario, ds_senha, cd_usuario) VALUES(:user_email, :username, :user_pass, :id_user)";
 
                         $sign_up_stmt = $this->db->prepare($sql);
@@ -73,15 +78,30 @@ class User extends Conexao
 
             if ($find_email->rowCount() === 1) {
                 $row = $find_email->fetch(PDO::FETCH_ASSOC);
-
-                if ($this->user_pass === $row['ds_senha']) {
-                    $_SESSION = [
-                        'user_id' => $row['id'],
-                        'email' => $row['ds_email']
-                    ];
-                    header('Location: admDashboard.php');
+                $match_pass = password_verify($this->user_pass, $row['ds_senha']);
+                // Verifique o tipo de usuário
+                if ($row['sg_tipo'] == 'ADMIN') {
+                    if ($this->user_pass ===  $row['ds_senha']) {
+                        $_SESSION = [
+                            'user_id' => $row['id'],
+                            'email' => $row['ds_email']
+                        ];
+                        header('Location: admin/admDashboard.php');
+                        exit;
+                    } else {
+                        return ['errorMessage' => 'Senha inválida'];
+                    }                    
                 } else {
-                    return ['errorMessage' => 'Senha inválida'];
+                    if ($match_pass) {
+                        $_SESSION = [
+                            'user_id' => $row['id'],
+                            'email' => $row['ds_email']
+                        ];
+                        header('Location: user/userDashboard.php');
+                        exit;
+                    } else {
+                        return ['errorMessage' => 'Senha inválida'];
+                    }                   
                 }
             } else {
                 return ['errorMessage' => 'Email inválido'];
@@ -120,15 +140,17 @@ class User extends Conexao
             $find_user->execute([$id]);
 
             if ($find_user->rowCount() === 1) {
-                // Atualiza os dados do usuário
+                
                 $this->hash_pass = password_hash($this->user_pass, PASSWORD_DEFAULT);
+                // Atualiza os dados do usuário
                 $sql = "UPDATE usuario SET nm_usuario = :username, ds_email = :user_email, ds_senha = :user_pass, cd_usuario = :idUser WHERE id = :id";
 
+                
                 $update_stmt = $this->db->prepare($sql);
                 // Atribui os valores a serem atualizados
                 $update_stmt->bindValue(':username', htmlspecialchars($this->user_name), PDO::PARAM_STR);
                 $update_stmt->bindValue(':user_email', $this->user_email, PDO::PARAM_STR);
-                $update_stmt->bindValue(':user_pass', $this->hash_pass);
+                $update_stmt->bindValue(':user_pass', $this->hash_pass, PDO::PARAM_STR);
                 $update_stmt->bindValue(':idUser', $this->id_user, PDO::PARAM_STR);
                 $update_stmt->bindValue(':id', $id, PDO::PARAM_INT);
                 $update_stmt->execute();
@@ -150,11 +172,11 @@ class User extends Conexao
             if ($user_id <= 0) {
                 return ['errorMessage' => 'ID de usuário inválido'];
             }
-    
+
             // Exclui o usuário do banco de dados
             $delete_user = $this->db->prepare("DELETE FROM usuario WHERE id = ?");
             $delete_user->execute([$user_id]);
-    
+
             if ($delete_user->rowCount() === 1) {
                 return ['successMessage' => 'Usuário excluído com sucesso'];
             } else {
@@ -164,7 +186,7 @@ class User extends Conexao
             die($e->getMessage());
         }
     }
-    
+
 
     function procurar_user_por_id($id)
     {
@@ -181,19 +203,18 @@ class User extends Conexao
         }
     }
 
-     // FETCH ALL USERS WHERE ID IS NOT EQUAL TO MY ID
-     function all_users($id){
-        try{
+    // FETCH ALL USERS WHERE ID IS NOT EQUAL TO MY ID
+    function all_users($id)
+    {
+        try {
             $get_users = $this->db->prepare("SELECT nm_usuario, ds_senha, cd_usuario FROM usuario WHERE id != ?");
             $get_users->execute([$id]);
-            if($get_users->rowCount() > 0){
+            if ($get_users->rowCount() > 0) {
                 return $get_users->fetchAll(PDO::FETCH_OBJ);
-            }
-            else{
+            } else {
                 return false;
             }
-        }
-        catch (PDOException $e) {
+        } catch (PDOException $e) {
             die($e->getMessage());
         }
     }

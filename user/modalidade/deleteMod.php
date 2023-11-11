@@ -1,5 +1,5 @@
 <?php
-require_once "src/controller/mod.php";
+require_once "../../src/controller/mod.php";
 if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     $mod_id = intval($_GET['id']);
 

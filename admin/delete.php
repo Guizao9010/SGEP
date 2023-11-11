@@ -1,7 +1,7 @@
 <?php
-require_once "src/controller/user.php";
-if (isset($_GET['id']) && is_numeric($_GET['id'])) {
-    $user_id = intval($_GET['id']);
+require_once "../src/controller/user.php";
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['user_id']) && is_numeric($_POST['user_id'])) {
+    $user_id = intval($_POST['user_id']);
 
     $user_data = new User();
 
@@ -17,6 +17,6 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
         echo "user não encontrado.";
     }
 } else {
-    echo "ID de user inválido.";
+    echo "ID do usuário inválido.";
 }
 ?>

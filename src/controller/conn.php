@@ -1,7 +1,7 @@
 <?php 
 
     define('HOST', 'localhost');
-    define('DBNAME', 'DB_SGEP');
+    define('DBNAME', 'dbsgep');
     define('USER', 'root');
     define('PASSWORD', 'usbw');
 

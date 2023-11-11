@@ -39,7 +39,7 @@ CREATE TABLE UNIDADE
  id_unidade INTEGER PRIMARY KEY AUTO_INCREMENT,    
  nm_unidade VARCHAR(50) NOT NULL,   
  ds_endereco VARCHAR(100) NOT NULL,   
- ds_unidadade VARCHAR(100) NOT NULL,   
+ ds_unidade VARCHAR(100) NOT NULL,   
  id_usuario INTEGER 
 );
 
@@ -84,5 +84,5 @@ ALTER TABLE UNIDADE_MODALIDADE ADD CONSTRAINT modalidade_unidade_fk FOREIGN KEY(
 
 ALTER TABLE UNIDADE_MODALIDADE ADD CONSTRAINT unidade_modalidade_pk PRIMARY KEY(id_modalidade, id_unidade);
 
-INSERT INTO usuario(ds_email, nm_usuario, ds_senha, cd_usuario, sg_tipo) VALUES ('admin@admin.com','Admin','123','SP','ADMIN'); --a senha é 123
+INSERT INTO usuario(ds_email, nm_usuario, ds_senha, cd_usuario, sg_tipo) VALUES ('admin@admin.com','Admin','123','SP','ADMIN');
 

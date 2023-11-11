@@ -1,17 +1,17 @@
 <?php
-require_once "src/controller/user.php";
-require_once "src/controller/mod.php";
-$mod_obj = new Mod();
+require_once "../../src/controller/user.php";
+//require_once "../../src/controller/noticia.php";
+//$not_obj = new Noticia();
 $user_obj = new User();
 if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
     $user_data = $user_obj->procurar_user_por_id($_SESSION['user_id']);
     if ($user_data ===  false) {
-        header('Location: logout.php');
+        header('Location: ../../logout.php');
         exit;
     }
-    $list_mods = $mod_obj->listarModalidades();
+    //$list_not = $not_obj->listarNoticiaUsuario($_SESSION['user_id']);
 } else {
-    header('Location: logout.php');
+    header('Location: ../../logout.php');
     exit;
 }
 ?>
@@ -24,14 +24,15 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.7/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
-    <link rel="stylesheet" href="src/css/dashboard.css">
+    <link rel="stylesheet" href="../../src/css/dashboard.css">
+    <title>Notícias</title>
 </head>
 
 <body bgcolor="#F9F6ED">
 
     <nav class="bg-white border-gray-200 dark:bg-gray-900">
         <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-            <a href="userDashboard.php" class="flex items-center">
+            <a href="../userDashboard.php" class="flex items-center">
                 <img src="" class="h-8 mr-3" alt="" />
                 <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">SGEP</span>
             </a>
@@ -42,13 +43,9 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
                 </button>
                 <!-- Dropdown menu -->
                 <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown">
-
                     <ul class="py-2" aria-labelledby="user-menu-button">
                         <li>
-                            <a href="areaUsuario.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Área de edição</a>
-                        </li>
-                        <li>
-                            <a href="logout.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sair</a>
+                            <a href="../../logout.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sair</a>
                         </li>
                     </ul>
                 </div>
@@ -61,17 +58,17 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
             </div>
             <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
                 <ul class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-                    <li>
+                <li>
                         <a href="noticias.php" class="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500" aria-current="page">Notícias</a>
                     </li>
                     <li>
-                        <a href="modalidades.php" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Modalidade</a>
+                        <a href="../modalidade/modalidades.php" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Modalidade</a>
                     </li>
                     <li>
-                        <a href="eventos.php" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Eventos</a>
+                        <a href="../evento/eventos.php" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Eventos</a>
                     </li>
                     <li>
-                        <a href="unidades.php" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Unidades</a>
+                        <a href="../unidade/unidades.php" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Unidades</a>
                     </li>
                 </ul>
             </div>
@@ -140,7 +137,7 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
             <span class="sr-only">Abrir menu</span>
         </button>
     </div>
-    <script src="src/js/speedDial.js"></script>
+    <script src="../../src/js/speedDial.js"></script>
 
 </body>
 
