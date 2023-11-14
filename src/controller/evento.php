@@ -30,7 +30,7 @@ class Event extends Conexao
     }
 
 
-    function cadastroEvento($eventName, $eventDescription, $eventDate, $idUsuario, $idUnidade)
+    function cadastroEvento($eventName, $eventDescription, $eventDate, $idUnidade, $idUsuario)
     {
         try {
             $this->event_name = trim($eventName);
