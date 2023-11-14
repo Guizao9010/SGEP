@@ -1,6 +1,9 @@
 <?php
 require_once "../../src/controller/mod.php";
+require_once "../../src/controller/user.php";
 $mod_obj = new Mod();
+$user_obj = new User();
+$user_data = $user_obj->procurar_user_por_id($_SESSION['user_id']);
 
 if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id']) && is_numeric($_GET['id'])) {
     $id = $_GET['id'];
