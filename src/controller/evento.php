@@ -95,7 +95,7 @@ class Event extends Conexao
                         // Atribui os valores a serem atualizados
                         $update_stmt->bindValue(':eventName', htmlspecialchars($this->event_name), PDO::PARAM_STR);
                         $update_stmt->bindValue(':eventDescription', htmlspecialchars($this->event_description), PDO::PARAM_STR);
-                        $update_stmt->bindValue(':eventDate', htmlspecialchars($this->event_description), PDO::PARAM_STR);
+                        $update_stmt->bindValue(':eventDate', htmlspecialchars($this->event_date), PDO::PARAM_STR);
                         $update_stmt->bindValue(':eventId', htmlspecialchars($this->event_id), PDO::PARAM_STR);
                         $update_stmt->execute();
 
