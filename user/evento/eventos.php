@@ -10,7 +10,7 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
     exit;
   }
   $idU = $user_data->id;
-  $list_events = $event_obj->listarEvento($_SESSION['user_id']);
+  $list_events = $event_obj->listarEventoUsuario($_SESSION['user_id']);
 } else {
   header('Location: ../../logout.php');
   exit;
