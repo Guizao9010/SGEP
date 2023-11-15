@@ -1,6 +1,8 @@
 <?php
 require "../../src/controller/user.php";
 require "../../src/controller/evento.php";
+require "../../src/controller/unit.php";
+$unit_obj = new Unit();
 $event_obj = new Event();
 $user_obj = new User();
 if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
@@ -9,12 +11,19 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
         header('Location: ../../logout.php');
         exit;
     }
+    $list_units = $unit_obj->listarUnidadesUsuario($_SESSION['user_id']);
     // Se o usuario requisitar o Cadastro de Eventos
-    if (isset($_POST['nome']) && isset($_POST['descricao']) && isset($_POST['data'])) {
-        $result = $event_obj->cadastroEvento($_POST['nome'], $_POST['descricao'], $_POST['data'], $_POST['unidade'],$_SESSION['user_id']);
+    if (isset($_POST['nome']) && isset($_POST['descricao']) && isset($_POST['data']) && isset($_POST['unidade'])) {
+        // Obter o ID da unidade a partir do nome selecionado
+        $idUnidade = $_POST['unidade'];
+        
+        // Chamar a função de cadastroEvento com o ID da unidade
+        $result = $event_obj->cadastroEvento($_POST['nome'], $_POST['descricao'], $_POST['data'], $idUnidade, $_SESSION['user_id']);
+    
         if (isset($result['successMessage'])) {
             $successMessage = $result['successMessage'];
         }
+    
         if (isset($result['errorMessage'])) {
             $errorMessage = $result['errorMessage'];
         }
@@ -100,7 +109,14 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
                 </div>
                 <div class="mb-6">
                     <label for="unidade" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Unidade</label>
-                    <input type="text" id="unidade" name="unidade" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" required>
+                    <select id="unidade" name="unidade" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                        <?php
+                        // Preencher o select com os nomes das unidades do banco de dados
+                        foreach ($list_units as $unidade) {
+                            echo "<option value='{$unidade['id_unidade']}'>{$unidade['nm_unidade']}</option>";
+                        }
+                        ?>
+                    </select>
                 </div>
                 <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Adicionar</button>
             </form>
@@ -115,5 +131,6 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
     }
     ?>
     <script type="text/javascript" src="../../src/js/dashboard.js"></script>
-    </body>
+</body>
+
 </html>

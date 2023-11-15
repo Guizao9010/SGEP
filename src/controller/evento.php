@@ -35,7 +35,7 @@ class Event extends Conexao
         try {
             $this->event_name = trim($eventName);
             $this->event_description = trim($eventDescription);
-            $this->event_date = trim($eventDate);
+            $this->event_date = date("Y-m-d", strtotime(trim($eventDate)));
 
             if (!empty($this->event_name) && !empty($this->event_description) && !empty($this->event_date)) {
                 $check_name = $this->db->prepare("SELECT * FROM evento WHERE nm_evento = ?");
@@ -95,7 +95,7 @@ class Event extends Conexao
                         // Atribui os valores a serem atualizados
                         $update_stmt->bindValue(':eventName', htmlspecialchars($this->event_name), PDO::PARAM_STR);
                         $update_stmt->bindValue(':eventDescription', htmlspecialchars($this->event_description), PDO::PARAM_STR);
-                        $update_stmt->bindValue(':eventDate', htmlspecialchars($this->event_date), PDO::PARAM_STR);
+                        $update_stmt->bindValue(':eventDate', htmlspecialchars($this->event_description), PDO::PARAM_STR);
                         $update_stmt->bindValue(':eventId', htmlspecialchars($this->event_id), PDO::PARAM_STR);
                         $update_stmt->execute();
 
