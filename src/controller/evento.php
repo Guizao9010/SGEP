@@ -63,21 +63,22 @@ class Event extends Conexao
     }
 
 
-    function atualizarEvento($idevent, $eventName, $eventDescription, $eventDate, $userId)
+    function atualizarEvento($idEvent, $eventName, $eventDescription, $eventDate, $idUnidade, $userId)
     {
         try {
             // Verifica se o ID da evento é válido
-            $id = intval($idevent);
+            $id = intval($idEvent);
             if ($id <= 0) {
                 return ['errorMessage' => 'ID de evento inválido'];
             }
 
             $this->event_name = trim($eventName);
             $this->event_description = trim($eventDescription);
-            $this->event_date = trim($eventDate);
-            $this->event_id = trim($idevent);
+            $this->event_date = date("Y-m-d", strtotime(trim($eventDate)));
 
-            if (!empty($this->event_name) && !empty($this->event_description) && !empty($this->event_date)) {
+            $this->event_id = trim($idEvent);
+
+            if (!empty($this->event_name) && !empty($this->event_description) && !empty($this->event_date) && !empty($idUnidade)) {
                 $check_name = $this->db->prepare("SELECT * FROM evento WHERE nm_evento = ? AND id_evento != ? AND id_usuario = ?");
                 $check_name->execute([$this->event_name, $this->event_id, $userId]);
                 if ($check_name->rowCount() > 0) {
@@ -89,13 +90,14 @@ class Event extends Conexao
 
                     if ($find_event->rowCount() === 1) {
                         // Atualiza os dados da evento
-                        $sql = "UPDATE evento SET nm_evento = :eventName, ds_evento = :eventDescription, dt_evento = :eventDate WHERE id_evento = :eventId";
+                        $sql = "UPDATE evento SET nm_evento = :eventName, ds_evento = :eventDescription, dt_evento = :eventDate, id_unidade = :idUnidade WHERE id_evento = :eventId";
 
                         $update_stmt = $this->db->prepare($sql);
                         // Atribui os valores a serem atualizados
                         $update_stmt->bindValue(':eventName', htmlspecialchars($this->event_name), PDO::PARAM_STR);
                         $update_stmt->bindValue(':eventDescription', htmlspecialchars($this->event_description), PDO::PARAM_STR);
-                        $update_stmt->bindValue(':eventDate', htmlspecialchars($this->event_description), PDO::PARAM_STR);
+                        $update_stmt->bindValue(':eventDate', htmlspecialchars($this->event_date), PDO::PARAM_STR);
+                        $update_stmt->bindValue(':idUnidade', htmlspecialchars($idUnidade), PDO::PARAM_STR);
                         $update_stmt->bindValue(':eventId', htmlspecialchars($this->event_id), PDO::PARAM_STR);
                         $update_stmt->execute();
 
@@ -112,11 +114,11 @@ class Event extends Conexao
         }
     }
 
-    function excluirEvento($idevent)
+    function excluirEvento($idEvent)
     {
         try {
             // Verifica se o ID da evento é válido
-            $event_id = intval($idevent);
+            $event_id = intval($idEvent);
             if ($event_id <= 0) {
                 return ['errorMessage' => 'ID da evento inválido'];
             }

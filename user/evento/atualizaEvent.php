@@ -1,5 +1,7 @@
 <?php
 require_once "../../src/controller/evento.php";
+require_once "../../src/controller/unit.php";
+$unit_obj = new Unit();
 $event_obj = new Event();
 
 if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id']) && is_numeric($_GET['id'])) {
@@ -7,11 +9,13 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id']) && is_numeric($_GE
     $eventoExistente = $event_obj->procurar_evento_por_id($id);
     if ($eventoExistente) {
         $evento_atual = $event_obj->listarEvento($id);
+        $list_units = $unit_obj->listarUnidadesUsuario($_SESSION['user_id']);
         // Exiba o formulário de atualização com os dados atuais
         // Certifique-se de preencher os campos do formulário com os dados atuais
 ?>
         <!DOCTYPE html>
         <html lang="pt-br">
+
         <head>
             <meta charset="UTF-8">
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -84,6 +88,17 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id']) && is_numeric($_GE
                             <label for="data" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Data</label>
                             <input type="date" id="data" name="data" value="<?php echo $evento_atual[0]['dt_evento']; ?>" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" required>
                         </div>
+                        <div class="mb-6">
+                            <label for="unidade" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Unidade</label>
+                            <select id="unidade" name="unidade" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                                <?php
+                                // Preencher o select com os nomes das unidades do banco de dados
+                                foreach ($list_units as $unidade) {
+                                    echo "<option value='{$unidade['id_unidade']}'>{$unidade['nm_unidade']}</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
                         <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Atualizar</button>
                     </form>
                 </div>
@@ -98,12 +113,15 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id']) && is_numeric($_GE
     $eventName = $_POST['nome'];
     $eventDescription = $_POST['descricao'];
     $evenDate = $_POST['data'];
-    $resultadoAtualizacao = $event_obj->atualizarEvento($id, $eventName, $eventDescription, $evenDate, $_SESSION['user_id']);
+    $idUnidade = $_POST['unidade'];
+    
+    $resultadoAtualizacao = $event_obj->atualizarEvento($id, $eventName, $eventDescription, $evenDate,  $idUnidade, $_SESSION['user_id']);
     header('Location: eventos.php');
     exit;
 } else {
     echo "ID de Evento inválido.";
 }
     ?>
-    </body>
-    </html>
+        </body>
+
+        </html>
