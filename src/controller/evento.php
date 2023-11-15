@@ -75,7 +75,6 @@ class Event extends Conexao
             $this->event_name = trim($eventName);
             $this->event_description = trim($eventDescription);
             $this->event_date = date("Y-m-d", strtotime(trim($eventDate)));
-
             $this->event_id = trim($idEvent);
 
             if (!empty($this->event_name) && !empty($this->event_description) && !empty($this->event_date) && !empty($idUnidade)) {
