@@ -84,7 +84,7 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
     </nav>
     <div class="flex-1 ml-64 p-9"> <!-- Adjust the ml-64 to create space between sidebar and table -->
         <div class="relative overflow-x-auto form-container">
-            <h1 style="font: 700 30px 'Montserrat', sans-serif; margin-bottom: 20px;">CADASTRO DE MODALIDADE</h1>
+            <h1 style="font: 700 30px 'Montserrat', sans-serif; margin-bottom: 20px;">CADASTRO DE UNIDADE</h1>
             <form action="" method="POST">
                 <div class="mb-6">
                     <label for="nome" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nome</label>

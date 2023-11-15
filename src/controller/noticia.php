@@ -1,5 +1,5 @@
 <?php
-require_once "./config/conexao.php";
+require_once 'conn.php';
 require_once 'config_session.php';
 class Noticia extends Conexao {
     protected $db;
@@ -28,33 +28,38 @@ class Noticia extends Conexao {
         return $not;
     }
 
-    function cadastroNoticia($nome, $conteudo, $dataNoticia, $imagem){
-        $this->noticia_name = trim($nome);
-        $this->noticia_conteudo = trim($conteudo);
-        $this->noticia_date = trim($dataNoticia);
-
-        // Converter a imagem em bytes
-        $dadosImagem = file_get_contents($imagem);
-        $this->noticia_photo = base64_encode($dadosImagem);
-        
+    function cadastroNoticia($noticiaName, $conteudo, $dataNoticia, $idUsuario)
+    {
         try {
-            // Preparar a consulta SQL
-            $sql = "INSERT INTO noticia (ds_conteudo, dt_noticia, id_noticia, im_noticia) VALUES (:nome, :conteudo, :dataNoticia, :imagem)";
-            $stmt = $this->db->prepare($sql);
-            
-            // Vincular os parâmetros
-            $stmt->bindParam(':nome', $nome);
-            $stmt->bindParam(':conteudo', $this->noticia_conteudo, PDO::PARAM_STR);
-            $stmt->bindParam(':dataNoticia', $this->noticia_date, PDO::PARAM_STR);
-            $stmt->bindParam(':imagem', $this->noticia_photo, PDO::PARAM_LOB);
-            
-            // Executar a consulta
-            return $stmt->execute();
+            $this->noticia_name = trim($noticiaName);
+            $this->noticia_conteudo = trim($conteudo);
+            $this->noticia_date = date("Y-m-d", strtotime(trim($dataNoticia)));
+
+            if (!empty($this->noticia_name) && !empty($this->noticia_conteudo) && !empty($this->noticia_date)) {
+                $check_name = $this->db->prepare("SELECT * FROM noticia WHERE nm_noticia = ?  AND id_usuario = ".$idUsuario);
+                $check_name->execute([$this->noticia_name]);
+                if ($check_name->rowCount() > 0) {
+                    return ['errorMessage' => 'Este nome já está registrado. Tente outro.'];
+                } else {
+                    $sql = "INSERT INTO noticia (nm_noticia, ds_noticia, dt_noticia, id_usuario) VALUES(:noticiaName, :conteudo, :eventDate, :idUsuario)";
+                    $sign_up_stmt = $this->db->prepare($sql);
+                    //BIND VALUES
+                    $sign_up_stmt->bindValue(':noticiaName', htmlspecialchars($this->noticia_name), PDO::PARAM_STR);
+                    $sign_up_stmt->bindValue(':conteudo', htmlspecialchars($this->noticia_conteudo), PDO::PARAM_STR);
+                    $sign_up_stmt->bindValue(':dataNoticia', htmlspecialchars($this->noticia_date), PDO::PARAM_STR);
+                    $sign_up_stmt->bindValue(':idUsuario', htmlspecialchars($idUsuario), PDO::PARAM_STR);
+                    $sign_up_stmt->execute();
+                   
+                    return ['successMessage' => 'Noticia cadastrada com sucesso.'];
+                }
+            } else {
+                return ['errorMessage' => 'Preencha todos os campos.'];
+            }
         } catch (PDOException $e) {
-            echo 'Erro ao cadastrar o Noticia: ' . $e->getMessage();
-            return false;
+            die($e->getMessage());
         }
     }
+
 
     function atualizarNoticia($noticiaID, $noticiaName, $dataNoticia, $conteudo, $userId)
     {
