@@ -38,7 +38,7 @@ class Unit extends Conexao
             $this->unit_desc = trim($descricao);
 
             if (!empty($this->unit_name) && !empty($this->unit_end) && !empty($this->unit_desc)) {
-                $check_name = $this->db->prepare("SELECT * FROM unidade WHERE nm_unidade = ?");
+                $check_name = $this->db->prepare("SELECT * FROM unidade WHERE nm_unidade = ? AND id_usuario = ".$idUsuario);
                 $check_name->execute([$this->unit_name]);
 
                 if ($check_name->rowCount() > 0) {
