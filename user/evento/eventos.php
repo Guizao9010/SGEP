@@ -127,7 +127,7 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
         <tbody>
           <?php foreach ($list_events as $event) : ?>
             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-              <?php $event_id = $event["id_evento"]; ?>
+              <?php var_dump($event_id = $event["id_evento"]); ?>
               <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                 <?= $event["nm_evento"] ?>
               </th>
@@ -142,8 +142,8 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
               </td>
               <td class="px-6 py-4">
                 <!-- Modal Editar -->
-                <a href="atualizaUnit.php?id=<?= $event['id_evento'] ?>" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" type="button">Editar</a>
-                <a href="deleteUnit.php?id=<?= $event['id_evento'] ?>" class="font-medium text-red-600 dark:text-red-500 hover:underline" type="button">Excluir</a>
+                <a href="atualizaEvent.php?id=<?= $event['id_evento'] ?>" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" type="button">Editar</a>
+                <a href="deleteEvent.php?id=<?= $event['id_evento'] ?>" class="font-medium text-red-600 dark:text-red-500 hover:underline" type="button">Excluir</a>
               </td>
             </tr>
           <?php endforeach; ?>

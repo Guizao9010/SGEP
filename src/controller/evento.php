@@ -24,7 +24,7 @@ class Event extends Conexao
 
     function listarEventoUsuario($id)
     {
-        $dados = $this->db->query("SELECT nm_evento, ds_evento, dt_evento, nm_unidade FROM evento e, unidade u WHERE e.id_usuario = " .$id." AND u.id_usuario = " .$id." AND e.id_unidade = u.id_unidade");
+        $dados = $this->db->query("SELECT id_evento, nm_evento, ds_evento, dt_evento, u.nm_unidade FROM evento e, unidade u WHERE e.id_usuario = " .$id." AND u.id_usuario = " .$id." AND e.id_unidade = u.id_unidade");
         $event = $dados->fetchAll(PDO::FETCH_ASSOC);
         return $event;
     }
@@ -98,7 +98,7 @@ class Event extends Conexao
 
                     if ($find_event->rowCount() === 1) {
                         // Atualiza os dados da evento
-                        $sql = "UPDATE evento SET nm_evento = :eventName, ds_evento = :eventDescription, dt_evento = :eventDate, id_unidade = :idUnidade WHERE id_evento = :eventId";
+                        $sql = "UPDATE evento SET nm_evento = :eventName, ds_evento = :eventDescription, dt_evento = :eventDate, id_unidade = :idUnidade WHERE id_evento = :eventId AND id_usuario =".$userId;
 
                         $update_stmt = $this->db->prepare($sql);
                         // Atribui os valores a serem atualizados
@@ -108,10 +108,7 @@ class Event extends Conexao
                         $update_stmt->bindValue(':idUnidade', htmlspecialchars($idUnidade), PDO::PARAM_STR);
                         $update_stmt->bindValue(':eventId', htmlspecialchars($this->event_id), PDO::PARAM_STR);
                         $update_stmt->execute();
-                        echo "<script> setTimeout(function(){
-                            window.location.href = 'eventos.php';
-                        }, 1000); // Tempo em milissegundos
-                        </script>";
+                       
                         return ['successMessage' => 'Informações da evento atualizadas com sucesso'];
                     } else {
                         return ['errorMessage' => 'evento não encontrada'];

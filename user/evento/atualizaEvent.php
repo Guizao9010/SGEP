@@ -1,10 +1,16 @@
 <?php
 require_once "../../src/controller/evento.php";
 require_once "../../src/controller/unit.php";
+require_once "../../src/controller/user.php";
 $unit_obj = new Unit();
 $event_obj = new Event();
+$user_obj = new User();
+$user_data = $user_obj->procurar_user_por_id($_SESSION['user_id']);
 
+var_dump($_GET['id']); // Adicione esta linha
 if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id']) && is_numeric($_GET['id'])) {
+    
+    var_dump( $_GET['id']);
     $id = $_GET['id'];
     $eventoExistente = $event_obj->procurar_evento_por_id($id);
     if ($eventoExistente) {
@@ -114,7 +120,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id']) && is_numeric($_GE
     $eventDescription = $_POST['descricao'];
     $evenDate = $_POST['data'];
     $idUnidade = $_POST['unidade'];
-    
+
     $resultadoAtualizacao = $event_obj->atualizarEvento($id, $eventName, $eventDescription, $evenDate,  $idUnidade, $_SESSION['user_id']);
     header('Location: eventos.php');
     exit;

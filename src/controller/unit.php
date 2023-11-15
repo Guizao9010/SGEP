@@ -30,12 +30,13 @@ class Unit extends Conexao
         return $unit;
     }
 
-    function buscarUnidade($key, $id) {
+    function buscarUnidade($key, $id)
+    {
         $busca = $this->db->query("SELECT * FROM unidade WHERE id_usuario = $id AND (nm_unidade LIKE '%$key%' OR ds_unidade LIKE '%$key%')");
         $mod = $busca->fetchAll(PDO::FETCH_ASSOC);
         return $mod;
     }
-    
+
     function cadastrarUnidade($unitname, $endereco, $descricao, $idUsuario)
     {
         try {
@@ -44,7 +45,7 @@ class Unit extends Conexao
             $this->unit_desc = trim($descricao);
 
             if (!empty($this->unit_name) && !empty($this->unit_end) && !empty($this->unit_desc)) {
-                $check_name = $this->db->prepare("SELECT * FROM unidade WHERE nm_unidade = ?  AND id_usuario = ".$idUsuario);
+                $check_name = $this->db->prepare("SELECT * FROM unidade WHERE nm_unidade = ?  AND id_usuario = " . $idUsuario);
                 $check_name->execute([$this->unit_name]);
 
                 if ($check_name->rowCount() > 0) {
@@ -59,8 +60,8 @@ class Unit extends Conexao
                     $sign_up_stmt->bindValue(':descricao', htmlspecialchars($this->unit_desc), PDO::PARAM_STR);
                     $sign_up_stmt->bindValue(':idUsuario', htmlspecialchars($idUsuario), PDO::PARAM_STR);
                     $sign_up_stmt->execute();
-                   
-                    return ['successMessage' => 'Unidade cadastrada com sucesso.'];                     
+
+                    return ['successMessage' => 'Unidade cadastrada com sucesso.'];
                 }
             } else {
                 return ['errorMessage' => 'Preencha todos os campos.'];
@@ -92,32 +93,31 @@ class Unit extends Conexao
                     return ['errorMessage' => 'Este nome já está registrado. Tente outro.'];
                 } else {
                     // Verifica se a modalidade existe
-                    $find_mod = $this->db->prepare("SELECT * FROM unidade WHERE id_unidade = ?");
-                    $find_mod->execute([$id]);
+                    $find_unit = $this->db->prepare("SELECT * FROM unidade WHERE id_unidade = ?");
+                    $find_unit->execute([$id]);
 
                     if ($find_unit->rowCount() === 1) {
                         // Atualiza os dados da Unidade
-                        $sql = "UPDATE unidade SET nm_unidade = :unitname, ds_endereco = :endereco, ds_unidade = :descricao WHERE id_unidade = :unitID";
+                        $sql = "UPDATE unidade SET nm_unidade = :unitname, ds_endereco = :endereco, ds_unidade = :descricao WHERE id_unidade = :unitID AND id_usuario = :userId";
                         $update_stmt = $this->db->prepare($sql);
-        
+
                         // Atribui os valores a serem atualizados
                         $update_stmt->bindValue(':unitname', htmlspecialchars($this->unit_name), PDO::PARAM_STR);
                         $update_stmt->bindValue(':endereco', htmlspecialchars($this->unit_end), PDO::PARAM_STR);
                         $update_stmt->bindValue(':descricao', htmlspecialchars($this->unit_desc), PDO::PARAM_STR);
                         $update_stmt->bindValue(':unitID', htmlspecialchars($this->id_unit), PDO::PARAM_STR);
+                        $update_stmt->bindValue(':userId', htmlspecialchars($userId), PDO::PARAM_STR);
+                        
                         $update_stmt->execute();
-                        echo "<script> setTimeout(function(){
-                            window.location.href = 'unidades.php';
-                        }, 1000); // Tempo em milissegundos
-                        </script>";
+
                         return ['successMessage' => 'Dados da Unidade atualizados com sucesso'];
                     } else {
                         return ['errorMessage' => 'Unidade não encontrada'];
                     }
                 }
-            }  else {
+            } else {
                 return ['errorMessage' => 'Preencha todos os campos.'];
-            }          
+            }
         } catch (PDOException $e) {
             die($e->getMessage());
         }

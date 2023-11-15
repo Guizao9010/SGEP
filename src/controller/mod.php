@@ -35,12 +35,13 @@ class Mod extends Conexao
         return $mod;
     }
 
-    function buscarModalidade($key, $id) {
+    function buscarModalidade($key, $id)
+    {
         $busca = $this->db->query("SELECT * FROM modalidade WHERE id_usuario = $id AND (nm_modalidade LIKE '%$key%' OR ds_modalidade LIKE '%$key%')");
         $mod = $busca->fetchAll(PDO::FETCH_ASSOC);
         return $mod;
     }
-    
+
 
     function cadastroMod($modName, $modDescription, $idUsuario)
     {
@@ -49,7 +50,7 @@ class Mod extends Conexao
             $this->mod_description = trim($modDescription);
 
             if (!empty($this->mod_name) && !empty($this->mod_description)) {
-                $check_name = $this->db->prepare("SELECT * FROM modalidade WHERE nm_modalidade = ? AND id_usuario = ".$idUsuario);
+                $check_name = $this->db->prepare("SELECT * FROM modalidade WHERE nm_modalidade = ? AND id_usuario = " . $idUsuario);
                 $check_name->execute([$this->mod_name]);
                 if ($check_name->rowCount() > 0) {
                     return ['errorMessage' => 'Este nome já está registrado. Tente outro.'];
@@ -61,7 +62,7 @@ class Mod extends Conexao
                     $sign_up_stmt->bindValue(':modDescription', htmlspecialchars($this->mod_description), PDO::PARAM_STR);
                     $sign_up_stmt->bindValue(':idUsuario', htmlspecialchars($idUsuario), PDO::PARAM_STR);
                     $sign_up_stmt->execute();
-                    
+
                     return ['successMessage' => 'Modalidade cadastrada com sucesso.'];
                 }
             } else {
@@ -98,18 +99,16 @@ class Mod extends Conexao
 
                     if ($find_mod->rowCount() === 1) {
                         // Atualiza os dados da modalidade
-                        $sql = "UPDATE modalidade SET nm_modalidade = :modName, ds_modalidade = :modDescription WHERE id_modalidade = :modId";
+                        $sql = "UPDATE modalidade SET nm_modalidade = :modName, ds_modalidade = :modDescription WHERE id_modalidade = :modId AND id_usuario = :userId";
 
                         $update_stmt = $this->db->prepare($sql);
                         // Atribui os valores a serem atualizados
                         $update_stmt->bindValue(':modName', htmlspecialchars($this->mod_name), PDO::PARAM_STR);
                         $update_stmt->bindValue(':modDescription', htmlspecialchars($this->mod_description), PDO::PARAM_STR);
                         $update_stmt->bindValue(':modId', htmlspecialchars($this->mod_id), PDO::PARAM_STR);
+                        $update_stmt->bindValue(':userId', htmlspecialchars($userId), PDO::PARAM_STR);
                         $update_stmt->execute();
-                        echo "<script> setTimeout(function(){
-                            window.location.href = 'modalidades.php';
-                        }, 1000); // Tempo em milissegundos
-                        </script>";
+                        
                         return ['successMessage' => 'Informações da Modalidade atualizadas com sucesso'];
                     } else {
                         return ['errorMessage' => 'Modalidade não encontrada'];
