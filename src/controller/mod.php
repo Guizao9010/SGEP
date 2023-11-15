@@ -36,7 +36,7 @@ class Mod extends Conexao
             $this->mod_description = trim($modDescription);
 
             if (!empty($this->mod_name) && !empty($this->mod_description)) {
-                $check_name = $this->db->prepare("SELECT * FROM modalidade WHERE nm_modalidade = ?");
+                $check_name = $this->db->prepare("SELECT * FROM modalidade WHERE nm_modalidade = ? AND id_usuario = ".$idUsuario);
                 $check_name->execute([$this->mod_name]);
                 if ($check_name->rowCount() > 0) {
                     return ['errorMessage' => 'Este nome já está registrado. Tente outro.'];
