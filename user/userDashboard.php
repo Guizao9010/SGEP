@@ -12,7 +12,7 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
     exit;
   }
   $list_units = $unit_obj->listarUnidadesUsuario($_SESSION['user_id']);
-  $list_mods = $mod_obj->listarModalidadeUsuarioLimitado($_SESSION['user_id']);
+  $list_mods = $mod_obj->listarModalidadeUsuario($_SESSION['user_id']);
 } else {
   header('Location: ../../logout.php');
   exit;
