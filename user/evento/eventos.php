@@ -127,7 +127,7 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
         <tbody>
           <?php foreach ($list_events as $event) : ?>
             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-              <?php var_dump($event_id = $event["id_evento"]); ?>
+              <?php $event_id = $event["id_evento"]; ?>
               <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                 <?= $event["nm_evento"] ?>
               </th>
