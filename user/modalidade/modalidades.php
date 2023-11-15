@@ -10,6 +10,9 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
         exit;
     }
     $list_mods = $mod_obj->listarModalidadeUsuario($_SESSION['user_id']);
+    if (isset($_GET['nome'])) {
+        $list_mods = $mod_obj->buscarModalidade($_GET['nome'], $_SESSION['user_id']);
+    }
 } else {
     header('Location: ../../logout.php');
     exit;
@@ -75,34 +78,84 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
             </div>
         </div>
     </nav>
-    <div class="flex-1 ml-64 p-20" style="display: flex; flex-direction: row; margin: 5px; flex-wrap: wrap;">
-
-        <?php foreach ($list_mods as $mod) : ?>
-
-            <div class="relative flex w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md" style="margin: 5px; flex-basis: calc(25% - 10px);">
-                <?php $mod_id = $mod["id_modalidade"]; ?>
-                <div class="p-6">
-                    <h5 class="mb-2 block font-sans text-xl font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased">
-                        <?= $mod["nm_modalidade"] ?>
-                    </h5>
-                    <p class="block font-sans text-base font-light leading-relaxed text-inherit antialiased">
-                        <?= $mod["ds_modalidade"] ?>
-                    </p>
+    <div class="flex-1 ml-50 p-8">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+            <form method="get" class="flex items-center">
+                <label for="voice-search" class="sr-only">Buscar</label>
+                <div class="relative w-full">
+                    <input type="text" name="nome" id="voice-search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" required>
                 </div>
-                <div class="p-6 pt-0">
-                    <a href="atualizaMod.php?id=<?= $mod['id_modalidade'] ?>">
-                        <button class="edit-button select-none rounded-lg bg-blue-500 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button" data-ripple-light="true">
-                            Editar
-                        </button>
-                    </a>
-                    <a href="deleteMod.php?id=<?= $mod['id_modalidade'] ?>">
-                        <button class="delete-button select-none rounded-lg bg-blue-500 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button" data-ripple-light="true">
-                            Apagar
-                        </button>
-                    </a>
-                </div>
-            </div>
-        <?php endforeach; ?>
+                <button type="submit" class="ml-2 inline-flex items-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-blue-600 dark:hover-bg-blue-700 focus:outline-none dark:focus-ring-blue-800">
+                    <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                    </svg>Buscar
+                </button>
+            </form>
+            <!-- <a href="cadastroUnidade.php">-->
+            <button type="button" data-modal-target="cadastro-modal" data-modal-toggle="cadastro-modal" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-blue-600 dark:hover-bg-blue-700 focus:outline-none dark:focus-ring-blue-800">Novo cadastro</button>
+            <!-- </a>-->
+        </div>
+
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <tr style="background-color: #0B3142; color:aliceblue;">
+                    <th scope="col" class="px-6 py-3">
+                        Nome
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Endereço
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Ação
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($list_mods as $mod) : ?>
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                            <?php $mod_id = $mod["id_modalidade"]; ?>
+                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                <?= $mod["nm_modalidade"] ?>
+                            </th>
+                            <td class="px-6 py-4">
+                                <?= $mod["ds_modalidade"] ?>
+                            </td>
+                            <td class="px-6 py-4">
+                                <!-- Modal Editar -->
+                                <a href="atualizaMod.php?id=<?= $mod['id_modalidade'] ?>" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" type="button">Editar</a>
+                                <a href="deleteMod.php?id=<?= $mod['id_modalidade'] ?>" class="font-medium text-red-600 dark:text-red-500 hover:underline" type="button">Excluir</a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+            <nav class="bg-white flex items-center flex-column flex-wrap md:flex-row justify-between pt-4" aria-label="Table navigation">
+                <!--<span class="ml-5 text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">Total <span class="font-semibold text-gray-900 dark:text-white">1-10</span> of <span class="font-semibold text-gray-900 dark:text-white">1000</span></span>-->
+                <ul class="m-2 inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+                    <li>
+                        <a href="#" class="rounded-l-lg flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Anterior</a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">2</a>
+                    </li>
+                    <li>
+                        <a href="#" aria-current="page" class="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">3</a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">4</a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">5</a>
+                    </li>
+                    <li>
+                        <a href="#" class="rounded-r-lg flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Próximo</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </div>
 
     <!-- Main modal -->
@@ -145,6 +198,7 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
                     $result = $mod_obj->cadastroMod($_POST['nome'], $_POST['descricao'], $_SESSION['user_id']);
                     if (isset($result['successMessage'])) {
                         $successMessage = $result['successMessage'];
+                        echo '<script>window.location.reload();</script>';
                     }
                     if (isset($result['errorMessage'])) {
                         $errorMessage = $result['errorMessage'];
@@ -155,47 +209,6 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
         </div>
     </div>
 
-    <div data-dial-init class="fixed right-6 bottom-6 group">
-        <div id="speed-dial-menu-click" class="flex flex-col items-center hidden mb-4 space-y-2">
-            <button type="button" data-modal-target="cadastro-modal" data-modal-toggle="cadastro-modal" data-tooltip-placement="left" class="flex justify-center items-center w-[52px] h-[52px] text-gray-500 hover:text-gray-900 bg-white rounded-full border border-gray-200 dark:border-gray-600 shadow-sm dark:hover:text-white dark:text-gray-400 hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600 focus:ring-4 focus:ring-gray-300 focus:outline-none dark:focus:ring-gray-400">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                    <path fill="gray" d="M13 9V3.5L18.5 9M6 2c-1.11 0-2 .89-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6H6Z" />
-                </svg>
-                <span class="sr-only">Cadastrar</span>
-            </button>
-            </diva>
-            <div id="tooltip-share" role="tooltip" class="absolute z-10 invisible inline-block w-auto px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                Cadastrar
-                <div class="tooltip-arrow" data-popper-arrow></div>
-            </div>
-            <button onclick="editButton()" type="button" data-tooltip-target="tooltip-print" data-tooltip-placement="left" class="flex justify-center items-center w-[52px] h-[52px] text-gray-500 hover:text-gray-900 bg-white rounded-full border border-gray-200 dark:border-gray-600 shadow-sm dark:hover:text-white dark:text-gray-400 hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600 focus:ring-4 focus:ring-gray-300 focus:outline-none dark:focus:ring-gray-400">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                    <path fill="gray" d="m11.4 18.161l7.396-7.396a10.289 10.289 0 0 1-3.326-2.234a10.29 10.29 0 0 1-2.235-3.327L5.839 12.6c-.577.577-.866.866-1.114 1.184a6.556 6.556 0 0 0-.749 1.211c-.173.364-.302.752-.56 1.526l-1.362 4.083a1.06 1.06 0 0 0 1.342 1.342l4.083-1.362c.775-.258 1.162-.387 1.526-.56c.43-.205.836-.456 1.211-.749c.318-.248.607-.537 1.184-1.114Zm9.448-9.448a3.932 3.932 0 0 0-5.561-5.561l-.887.887l.038.111a8.754 8.754 0 0 0 2.092 3.32a8.754 8.754 0 0 0 3.431 2.13l.887-.887Z" />
-                </svg>
-                <span class="sr-only">Editar</span>
-            </button>
-            <div id="tooltip-print" role="tooltip" class="absolute z-10 invisible inline-block w-auto px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                Editar
-                <div class="tooltip-arrow" data-popper-arrow></div>
-            </div>
-            <button onclick="deleteButton()" type="button" data-tooltip-target="tooltip-trash" data-tooltip-placement="left" class="flex justify-center items-center w-[52px] h-[52px] text-gray-500 hover:text-gray-900 bg-white rounded-full border border-gray-200 dark:border-gray-600 dark:hover:text-white shadow-sm dark:text-gray-400 hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600 focus:ring-4 focus:ring-gray-300 focus:outline-none dark:focus:ring-gray-400">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                    <path fill="gray" d="M19 4h-3.5l-1-1h-5l-1 1H5v2h14M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12Z" />
-                </svg>
-                <span class="sr-only">Deletar</span>
-            </button>
-            <div id="tooltip-trash" role="tooltip" class="absolute z-10 invisible inline-block w-auto px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                Deletar
-                <div class="tooltip-arrow" data-popper-arrow></div>
-            </div>
-        </div>
-        <button type="button" data-dial-toggle="speed-dial-menu-click" data-dial-trigger="click" aria-controls="speed-dial-menu-click" aria-expanded="false" class="flex items-center justify-center text-white bg-blue-700 rounded-full w-14 h-14 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:focus:ring-blue-800">
-            <svg class="w-5 h-5 transition-transform group-hover:rotate-45" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16" />
-            </svg>
-            <span class="sr-only">Abrir menu</span>
-        </button>
-    </div>
     <script src="../../src/js/speedDial.js"></script>
 </body>
 

@@ -30,6 +30,12 @@ class Unit extends Conexao
         return $unit;
     }
 
+    function buscarUnidade($key, $id) {
+        $busca = $this->db->query("SELECT * FROM unidade WHERE id_usuario = $id AND (nm_unidade LIKE '%$key%' OR ds_unidade LIKE '%$key%')");
+        $mod = $busca->fetchAll(PDO::FETCH_ASSOC);
+        return $mod;
+    }
+    
     function cadastrarUnidade($unitname, $endereco, $descricao, $idUsuario)
     {
         try {
@@ -38,7 +44,7 @@ class Unit extends Conexao
             $this->unit_desc = trim($descricao);
 
             if (!empty($this->unit_name) && !empty($this->unit_end) && !empty($this->unit_desc)) {
-                $check_name = $this->db->prepare("SELECT * FROM unidade WHERE nm_unidade = ? AND id_usuario = ".$idUsuario);
+                $check_name = $this->db->prepare("SELECT * FROM unidade WHERE nm_unidade = ?  AND id_usuario = ".$idUsuario);
                 $check_name->execute([$this->unit_name]);
 
                 if ($check_name->rowCount() > 0) {
@@ -53,7 +59,8 @@ class Unit extends Conexao
                     $sign_up_stmt->bindValue(':descricao', htmlspecialchars($this->unit_desc), PDO::PARAM_STR);
                     $sign_up_stmt->bindValue(':idUsuario', htmlspecialchars($idUsuario), PDO::PARAM_STR);
                     $sign_up_stmt->execute();
-                    return ['successMessage' => 'Unidade cadastrada com sucesso.'];
+                   
+                    return ['successMessage' => 'Unidade cadastrada com sucesso.'];                     
                 }
             } else {
                 return ['errorMessage' => 'Preencha todos os campos.'];
@@ -99,7 +106,10 @@ class Unit extends Conexao
                         $update_stmt->bindValue(':descricao', htmlspecialchars($this->unit_desc), PDO::PARAM_STR);
                         $update_stmt->bindValue(':unitID', htmlspecialchars($this->id_unit), PDO::PARAM_STR);
                         $update_stmt->execute();
-        
+                        echo "<script> setTimeout(function(){
+                            window.location.href = 'unidades.php';
+                        }, 1000); // Tempo em milissegundos
+                        </script>";
                         return ['successMessage' => 'Dados da Unidade atualizados com sucesso'];
                     } else {
                         return ['errorMessage' => 'Unidade não encontrada'];

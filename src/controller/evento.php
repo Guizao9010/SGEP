@@ -24,11 +24,19 @@ class Event extends Conexao
 
     function listarEventoUsuario($id)
     {
-        $dados = $this->db->query("SELECT * FROM evento WHERE id_usuario = " . $id);
+        $dados = $this->db->query("SELECT nm_evento, ds_evento, dt_evento, nm_unidade FROM evento e, unidade u WHERE e.id_usuario = " .$id." AND u.id_usuario = " .$id." AND e.id_unidade = u.id_unidade");
         $event = $dados->fetchAll(PDO::FETCH_ASSOC);
         return $event;
     }
-
+    
+    function buscarEvento($key, $id) {
+        $busca = $this->db->query(
+            "SELECT nm_evento, ds_evento, dt_evento, nm_unidade FROM evento e, unidade u 
+            WHERE e.id_usuario = " .$id." AND u.id_usuario = " .$id." AND e.id_unidade = u.id_unidade AND (nm_unidade LIKE '%$key%' OR nm_evento LIKE '%$key%')");
+        $mod = $busca->fetchAll(PDO::FETCH_ASSOC);
+        return $mod;
+    }
+    
 
     function cadastroEvento($eventName, $eventDescription, $eventDate, $idUnidade, $idUsuario)
     {
@@ -38,7 +46,7 @@ class Event extends Conexao
             $this->event_date = date("Y-m-d", strtotime(trim($eventDate)));
 
             if (!empty($this->event_name) && !empty($this->event_description) && !empty($this->event_date)) {
-                $check_name = $this->db->prepare("SELECT * FROM evento WHERE nm_evento = ?");
+                $check_name = $this->db->prepare("SELECT * FROM evento WHERE nm_evento = ?  AND id_usuario = ".$idUsuario);
                 $check_name->execute([$this->event_name]);
                 if ($check_name->rowCount() > 0) {
                     return ['errorMessage' => 'Este nome já está registrado. Tente outro.'];
@@ -52,6 +60,7 @@ class Event extends Conexao
                     $sign_up_stmt->bindValue(':idUnidade', htmlspecialchars($idUnidade), PDO::PARAM_STR);
                     $sign_up_stmt->bindValue(':idUsuario', htmlspecialchars($idUsuario), PDO::PARAM_STR);
                     $sign_up_stmt->execute();
+                   
                     return ['successMessage' => 'Evento cadastrado com sucesso.'];
                 }
             } else {
@@ -99,7 +108,10 @@ class Event extends Conexao
                         $update_stmt->bindValue(':idUnidade', htmlspecialchars($idUnidade), PDO::PARAM_STR);
                         $update_stmt->bindValue(':eventId', htmlspecialchars($this->event_id), PDO::PARAM_STR);
                         $update_stmt->execute();
-
+                        echo "<script> setTimeout(function(){
+                            window.location.href = 'eventos.php';
+                        }, 1000); // Tempo em milissegundos
+                        </script>";
                         return ['successMessage' => 'Informações da evento atualizadas com sucesso'];
                     } else {
                         return ['errorMessage' => 'evento não encontrada'];

@@ -28,6 +28,19 @@ class Mod extends Conexao
         return $mod;
     }
 
+    function listarModalidadeUsuarioLimitado($id)
+    {
+        $dados = $this->db->query("SELECT * FROM modalidade WHERE id_usuario = " . $id . " LIMIT 10");
+        $mod = $dados->fetchAll(PDO::FETCH_ASSOC);
+        return $mod;
+    }
+
+    function buscarModalidade($key, $id) {
+        $busca = $this->db->query("SELECT * FROM modalidade WHERE id_usuario = $id AND (nm_modalidade LIKE '%$key%' OR ds_modalidade LIKE '%$key%')");
+        $mod = $busca->fetchAll(PDO::FETCH_ASSOC);
+        return $mod;
+    }
+    
 
     function cadastroMod($modName, $modDescription, $idUsuario)
     {
@@ -48,6 +61,7 @@ class Mod extends Conexao
                     $sign_up_stmt->bindValue(':modDescription', htmlspecialchars($this->mod_description), PDO::PARAM_STR);
                     $sign_up_stmt->bindValue(':idUsuario', htmlspecialchars($idUsuario), PDO::PARAM_STR);
                     $sign_up_stmt->execute();
+                    
                     return ['successMessage' => 'Modalidade cadastrada com sucesso.'];
                 }
             } else {
@@ -92,7 +106,10 @@ class Mod extends Conexao
                         $update_stmt->bindValue(':modDescription', htmlspecialchars($this->mod_description), PDO::PARAM_STR);
                         $update_stmt->bindValue(':modId', htmlspecialchars($this->mod_id), PDO::PARAM_STR);
                         $update_stmt->execute();
-
+                        echo "<script> setTimeout(function(){
+                            window.location.href = 'modalidades.php';
+                        }, 1000); // Tempo em milissegundos
+                        </script>";
                         return ['successMessage' => 'Informações da Modalidade atualizadas com sucesso'];
                     } else {
                         return ['errorMessage' => 'Modalidade não encontrada'];

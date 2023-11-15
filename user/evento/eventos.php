@@ -1,6 +1,8 @@
 <?php
 require_once "../../src/controller/user.php";
 require_once "../../src/controller/evento.php";
+require "../../src/controller/unit.php";
+$unit_obj = new Unit();
 $event_obj = new Event();
 $user_obj = new User();
 if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
@@ -9,8 +11,12 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
     header('Location: ../../logout.php');
     exit;
   }
-  $idU = $user_data->id;
+  //$idU = $user_data->id;
+  $list_units = $unit_obj->listarUnidadesUsuario($_SESSION['user_id']);
   $list_events = $event_obj->listarEventoUsuario($_SESSION['user_id']);
+  if (isset($_GET['nome'])) {
+    $list_events = $event_obj->buscarEvento($_GET['nome'], $_SESSION['user_id']);
+  }
 } else {
   header('Location: ../../logout.php');
   exit;
@@ -18,13 +24,13 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.7/dist/tailwind.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
-  <link rel="stylesheet" href="../../src/css/dashboard.css">
   <title>Eventos</title>
 </head>
 
@@ -74,10 +80,30 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
       </div>
     </div>
   </nav>
+
   <div class="flex-1 ml-50 p-8">
-    <div style="display: flex; justify-content: flex-end; margin-bottom: 5px;">
-      <a href="cadastroEvento.php"><button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-blue-600 dark:hover-bg-blue-700 focus:outline-none dark:focus-ring-blue-800">Novo cadastro</button></a>
+    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+      <form method="get" class="flex items-center">
+        <label for="voice-search" class="sr-only">Buscar</label>
+        <div class="relative w-full">
+          <input type="text" name="nome" id="voice-search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="">
+        </div>
+        <!--
+        <div class="relative w-full">
+        <input type="month" name="data" id="voice-search" class="ml-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="">          
+        </div>-->
+
+        <button type="submit" class="ml-3 inline-flex items-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-blue-600 dark:hover-bg-blue-700 focus:outline-none dark:focus-ring-blue-800">
+          <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+          </svg>Buscar
+        </button>
+      </form>
+      <!--<a href="cadastroEvento.php">-->
+        <button type="button" data-modal-target="cadastro-modal" data-modal-toggle="cadastro-modal" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-blue-600 dark:hover-bg-blue-700 focus:outline-none dark:focus-ring-blue-800">Novo cadastro</button>
+      <!--</a>-->
     </div>
+
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
       <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <tr style="background-color: #0B3142; color:aliceblue;">
@@ -89,6 +115,9 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
           </th>
           <th scope="col" class="px-6 py-3">
             Data
+          </th>
+          <th scope="col" class="px-6 py-3">
+            Unidade
           </th>
           <th scope="col" class="px-6 py-3">
             Ação
@@ -109,14 +138,110 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
                 <?= $event["dt_evento"] ?>
               </td>
               <td class="px-6 py-4">
+                <?= $event["nm_unidade"] ?>
+              </td>
+              <td class="px-6 py-4">
                 <!-- Modal Editar -->
-                <a href="atualizaEvent.php?id=<?= $event['id_evento'] ?>" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" type="button">Editar</a>
-                <a href="deleteEvent.php?id=<?= $event['id_evento'] ?>" class="font-medium text-red-600 dark:text-red-500 hover:underline" type="button">Excluir</a>
+                <a href="atualizaUnit.php?id=<?= $event['id_evento'] ?>" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" type="button">Editar</a>
+                <a href="deleteUnit.php?id=<?= $event['id_evento'] ?>" class="font-medium text-red-600 dark:text-red-500 hover:underline" type="button">Excluir</a>
               </td>
             </tr>
           <?php endforeach; ?>
         </tbody>
       </table>
+      <nav class="bg-white flex items-center flex-column flex-wrap md:flex-row justify-between pt-4" aria-label="Table navigation">
+        <!--<span class="ml-5 text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">Total <span class="font-semibold text-gray-900 dark:text-white">1-10</span> of <span class="font-semibold text-gray-900 dark:text-white">1000</span></span>-->
+        <ul class="m-2 inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+          <li>
+            <a href="#" class="rounded-l-lg flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Anterior</a>
+          </li>
+          <li>
+            <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
+          </li>
+          <li>
+            <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">2</a>
+          </li>
+          <li>
+            <a href="#" aria-current="page" class="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">3</a>
+          </li>
+          <li>
+            <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">4</a>
+          </li>
+          <li>
+            <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">5</a>
+          </li>
+          <li>
+            <a href="#" class="rounded-r-lg flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Próximo</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Main modal -->
+  <div id="cadastro-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-md max-h-full">
+      <!-- Modal content -->
+      <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+        <!-- Modal header -->
+        <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+            Cadastrar Evento
+          </h3>
+          <button type="button" class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="cadastro-modal">
+            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+            </svg>
+            <span class="sr-only">Fechar</span>
+          </button>
+        </div>
+        <!-- Modal body -->
+        <div class="p-4 md:p-5">
+          <form class="space-y-4" action="" method="POST">
+            <div>
+              <label for="nome" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nome</label>
+              <input type="text" name="nome" id="nome" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required>
+            </div>
+            <div>
+              <label for="descricao" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descrição</label>
+              <input type="text" name="descricao" id="descricao" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required>
+            </div>
+            <div>
+              <label for="data" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Data</label>
+              <input type="date" name="data" id="data" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required>
+            </div>
+            <div>
+              <label for="unidade" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Unidade</label>
+              <select id="unidade" name="unidade" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                <?php
+                // Preencher o select com os nomes das unidades do banco de dados
+                foreach ($list_units as $unidade) {
+                  echo "<option value='{$unidade['id_unidade']}'>{$unidade['nm_unidade']}</option>";
+                }
+                ?>
+              </select>
+            </div>
+            <!-- Rodapé do Modal -->
+            <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+              <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Adicionar</button>
+              <button data-modal-hide="cadastro-modal" type="button" class="ml-5 ms-3 text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Cancelar</button>
+            </div>
+          </form>
+        </div>
+        <?php
+        if (isset($_POST['nome']) && isset($_POST['descricao']) && isset($_POST['data']) && isset($_POST['unidade'])) {          
+          $idUnidade = $_POST['unidade'];
+          $result = $event_obj->cadastroEvento($_POST['nome'], $_POST['descricao'], $_POST['data'], $idUnidade, $_SESSION['user_id']);
+          if (isset($result['successMessage'])) {
+            $successMessage = $result['successMessage'];
+            echo '<script>window.location.reload();</script>';
+          }
+          if (isset($result['errorMessage'])) {
+            $errorMessage = $result['errorMessage'];
+          }
+        }
+        ?>
+      </div>
     </div>
   </div>
 </body>
