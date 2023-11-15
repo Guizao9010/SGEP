@@ -38,7 +38,7 @@ class Event extends Conexao
             $this->event_date = date("Y-m-d", strtotime(trim($eventDate)));
 
             if (!empty($this->event_name) && !empty($this->event_description) && !empty($this->event_date)) {
-                $check_name = $this->db->prepare("SELECT * FROM evento WHERE nm_evento = ?");
+                $check_name = $this->db->prepare("SELECT * FROM evento WHERE nm_evento = ? AND id_usuario = ".$idUsuario);
                 $check_name->execute([$this->event_name]);
                 if ($check_name->rowCount() > 0) {
                     return ['errorMessage' => 'Este nome já está registrado. Tente outro.'];
