@@ -1,0 +1,38 @@
+.custom-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  max-width: 800px;
+  /* Definir uma largura máxima para o container */
+  width: 100%;
+}
+
+.custom-list {
+  flex: 1;
+  padding-right: 20px;
+}
+
+.custom-image {
+  flex: 1;
+}
+
+.unidade {
+  margin: 0;
+  /* Remover margens padrão do body */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bg-noticias{
+    background-color: #F3F3F3;
+}
+
+.border-top-color{
+    border-top: #0B3142 2px solid;
+}
+
+.border-bottom-color{
+    border-bottom: #0B3142 2px solid;
+}
