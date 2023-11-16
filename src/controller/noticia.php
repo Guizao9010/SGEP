@@ -35,6 +35,12 @@ class Noticia extends Conexao {
         return $not;
     }
 
+    function buscarNoticia($key, $id)
+    {
+        $busca = $this->db->query("SELECT * FROM noticia WHERE id_usuario = $id AND (nm_titulo LIKE '%$key%')");
+        $not = $busca->fetchAll(PDO::FETCH_ASSOC);
+        return $not;
+    }
 
     function cadastroNoticia($noticiaName, $conteudo, $urlImagem, $noticiaDate, $idUsuario)
     {

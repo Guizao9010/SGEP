@@ -12,6 +12,9 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
     }
     $idU = $user_data->id;
     $list_noticias = $noticia_obj->listarNoticiaUsuario($_SESSION['user_id']);
+    if (isset($_GET['nome'])) {
+        $list_noticias = $noticia_obj->buscarNoticia($_GET['nome'], $_SESSION['user_id']);
+    }
 } else {
     header('Location: ../../logout.php');
     exit;
@@ -81,7 +84,7 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
             <form method="get" class="flex items-center">
                 <label for="voice-search" class="sr-only">Buscar</label>
                 <div class="relative w-full">
-                    <input type="text" name="nome" id="voice-search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="">
+                    <input type="text" name="nome" id="voice-search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Procurar Título" required>
                 </div>
                 <!--
         <div class="relative w-full">

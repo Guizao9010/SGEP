@@ -18,11 +18,17 @@ class User extends Conexao
     }
 
     //MOSTRAR USUÁRIO
-
     function listarUsuarios()
     {
         $dados = $this->db->query("SELECT * FROM usuario");
         $user = $dados->fetchAll(PDO::FETCH_ASSOC);
+        return $user;
+    }
+
+    function buscarUsuario($key)
+    {
+        $busca = $this->db->query("SELECT * FROM usuario WHERE nm_usuario = '$key' OR cd_usuario = '$key'");
+        $user = $busca->fetchAll(PDO::FETCH_ASSOC);
         return $user;
     }
 
