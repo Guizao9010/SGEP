@@ -11,7 +11,7 @@ CREATE TABLE USUARIO
 CREATE TABLE EVENTO  
 (  
  id_evento INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,   
- nm_evento VARCHAR(50),   
+ nm_evento VARCHAR(50) NOT NULL,   
  ds_evento VARCHAR(100) NOT NULL,   
  dt_evento DATE NOT NULL, 
  id_unidade INTEGER,
@@ -28,8 +28,10 @@ CREATE TABLE MODALIDADE
 
 CREATE TABLE NOTICIA  
 (  
- id_noticia INTEGER PRIMARY KEY AUTO_INCREMENT,   
- ds_conteudo VARCHAR(100) NOT NULL,   
+ id_noticia INTEGER PRIMARY KEY AUTO_INCREMENT,
+ nm_titulo VARCHAR(250) NOT NULL,   
+ ds_conteudo LONGTEXT NOT NULL,
+ im_capa_url LONGTEXT,   
  dt_noticia DATE NOT NULL,
  id_usuario INTEGER 
 );

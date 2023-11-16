@@ -17,26 +17,26 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id']) && is_numeric($_GE
         <html lang="pt-br">
 
         <head>
-            <meta charset="UTF-8">
-            <meta http-equiv="X-UA-Compatible" content="IE=edge">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta charset="UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.7/dist/tailwind.min.css" rel="stylesheet">
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" />
             <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
-            <link rel="stylesheet" href="../../src/css/dashboard.css">
-            <title>Atualizar Notícia</title>
+            <link rel="stylesheet" href="../../src/css/userPanel.css">
+            <title>Detalhes Notícias</title>
         </head>
 
-        <body bgcolor="#F9F6ED">
+        <body>
             <div style="border-bottom: #0B3142 2px solid;">
                 <nav class="bg-white border-gray-200 dark:bg-gray-900">
                     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
                         <a href="../userDashboard.php" class="flex items-center">
+                            <img src="" class="h-8 mr-3" alt="" />
                             <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">SGEP</span>
                         </a>
                         <div class="flex items-center md:order-2">
                             <button type="button" class="flex mr-3 text-sm" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
-                                <span class="sr-only">Abrir menu</span>
+                                <span class="sr-only">Open user menu</span>
                                 <?php echo $user_data->nm_usuario ?>
                             </button>
                             <!-- Dropdown menu -->
@@ -73,49 +73,62 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id']) && is_numeric($_GE
                     </div>
                 </nav>
             </div>
-            <div class="flex-1 ml-64 p-9"> <!-- Adjust the ml-64 to create space between sidebar and table -->
-                <div class="relative overflow-x-auto form-container">
-                    <h1 style="font: 700 30px 'Montserrat', sans-serif; margin-bottom: 20px;">ATUALIZAÇÃO DA NOTÍCIA</h1>
-                    <form action="" method="POST">
-                        <div class="mb-6">
-                            <input type="hidden" name="id" value="<?= $id ?>">
-                            <label for="nome" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nome</label>
-                            <input type="text" id="nome" name="nome" value="<?php echo $noticia_atual[0]['nm_titulo']; ?>" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" required>
+
+            <main class="mt-10">
+
+                <div class="mb-4 md:mb-0 w-full max-w-screen-md mx-auto relative" style="height: 24em;">
+                    <div class="absolute left-0 bottom-0 w-full h-full z-10" style="background-image: linear-gradient(180deg,transparent,rgba(0,0,0,.7));"></div>
+                    <img src="<?= $noticia_atual[0]["im_capa_url"] ?>" class="absolute left-0 top-0 w-full h-full z-0 object-cover" />
+                    <div class="p-4 absolute bottom-0 left-0 z-20">
+                        <a href="#" class="px-4 py-1 bg-black text-gray-200 inline-flex items-center justify-center mb-2"></a>
+                        <h2 class="text-4xl font-semibold text-gray-100 leading-tight">
+                            <?php echo $noticia_atual[0]['nm_titulo']; ?>
+                        </h2>
+                        <div class="flex mt-3">
+                            <div>
+                                <p class="font-semibold text-gray-400 text-xs">
+                                    <?php echo date("d-m-Y", strtotime($noticia_atual[0]['dt_noticia'])); ?>
+                                </p>
+                            </div>
                         </div>
-                        <div class="mb-6">
-                            <label for="conteudo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Conteúdo</label>
-                            <textarea id="conteudo" name="conteudo" rows="15" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" required><?php echo $noticia_atual[0]['ds_conteudo']; ?></textarea>
-                        </div>
-                        <div class="mb-6">
-                            <label for="urlImagem" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Data</label>
-                            <input type="text" id="urlImagem" name="urlImagem" value="<?php echo $noticia_atual[0]['im_capa_url']; ?>" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" required>
-                        </div>
-                        <div class="mb-6">
-                            <label for="data" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Data</label>
-                            <input type="date" id="data" name="data" value="<?php echo $noticia_atual[0]['dt_noticia']; ?>" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" required>
-                        </div>
-                        <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Atualizar</button>
-                    </form>
+                    </div>
                 </div>
-            </div>
+
+                <div class="px-4 lg:px-0 mt-12 text-gray-700 max-w-screen-md mx-auto text-lg leading-relaxed">
+                    <p class="pb-6 text-justify"><?php echo $noticia_atual[0]['ds_conteudo']; ?></p>
+                </div>
+            </main>
     <?php
     } else {
         echo "noticiao não encontrado.";
     }
-} elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Processar a submissão do formulário de atualização
-    $id = $_POST['id'];
-    $noticiaName = $_POST['nome'];
-    $noticiaConteudo = $_POST['conteudo'];
-    $urlImagem = $_POST['urlImagem'];
-    $noticiaDate = $_POST['data'];
-    $resultadoAtualizacao = $noticia_obj->atualizarNoticia($id, $noticiaName, $noticiaConteudo, $urlImagem, $noticiaDate, $_SESSION['user_id']);
-    header('Location: noticias.php');
-    exit;
-} else {
-    echo "ID de noticiao inválido.";
 }
     ?>
+    <div class="border-top-color">
+        <footer class="bg-white m-4">
+            <div class="w-full max-w-screen-xl mx-auto p-4 md:py-8">
+                <div class="sm:flex sm:items-center sm:justify-between">
+                    <a href="#" class="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse">
+                        <span class="self-center text-3xl font-semibold whitespace-nowrap dark:text-white">SGEP</span>
+                    </a>
+                    <ul class="flex flex-wrap items-center mb-6 text-sm font-medium text-gray-500 sm:mb-0 dark:text-gray-400">
+                        <li>
+                            <a href="#noticias" class="hover:underline me-4 md:me-6 mr-2">Notícias</a>
+                        </li>
+                        <li>
+                            <a href="#modalidades" class="hover:underline me-4 md:me-6 mr-2">Modalidades</a>
+                        </li>
+                        <li>
+                            <a href="#unidade" class="hover:underline me-4 md:me-6">Unidades</a>
+                        </li>
+                    </ul>
+                </div>
+                <hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
+                <span class="block text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2023 <a href="" class="hover:underline"><?php echo $user_data->nm_usuario ?></a>.Todos os direitos reservados.</span>
+                <span class="block text-sm text-gray-500 sm:text-center dark:text-gray-400">Desenvolvido por <a href="" class="hover:underline">Fatecanos</a></span>
+            </div>
+        </footer>
+    </div>
         </body>
 
         </html>
