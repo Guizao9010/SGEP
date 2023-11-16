@@ -95,7 +95,7 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
         <?php $noticia_id = $noticia["id_noticia"]; ?>
         <div class="m-10 max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
           <a href="#">
-            <img class="rounded-t-lg" src="https://img.freepik.com/fotos-gratis/o-homem-idoso-esta-usando-o-telefone-movel_53876-30130.jpg?w=1380&t=st=1698343354~exp=1698343954~hmac=fa48e60536b16a3a6627d8e34b1e9de762444b9c503c60222d5ec0cb2a16dc36" alt="" />
+            <img class="rounded-t-lg" src="<?= $noticia["im_capa_url"] ?>" alt="" />
           </a>
           <div class="p-5">
             <a href="#">
